@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home — Janus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-brand:#0080a3; --color-primary-50:#f4f9fb; --color-primary-100:#cee5f0;
+  --color-primary-200:#a4d1e3; --color-primary-600:#007b9e; --color-primary-700:#006484;
+  --color-success-500:#349b21; --color-error-500:#fb3e37; --color-warning-400:#fa751a;
+  --color-amber-500:#c17500;
+  --color-neutral-50:#f8fafc; --color-neutral-100:#f1f5f9; --color-neutral-200:#e2e8f0;
+  --color-neutral-300:#cbd5e1; --color-neutral-400:#94a3b8; --color-neutral-500:#64748b;
+  --color-neutral-600:#475569; --color-neutral-700:#334155;
+  --color-ec-lighter:#f5f6f7; --color-ec-light:#e2e5e7;
+  --color-ec-dark:#4f5c62; --color-ec-darkest:#10171a;
+  --bg-primary:#fff; --bg-secondary:#f5f6f7; --bg-inverted:#10171a;
+  --text-primary:#10171a; --text-secondary:#4f5c62; --text-tertiary:#94a3b8; --text-inverted:#fff;
+  --border-default:#e2e5e7; --interactive:#0080a3; --interactive-hover:#006484;
+  --shadow-xs:0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-sm:0 1px 2px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --radius-md:4px; --radius-lg:8px; --radius-xl:12px; --radius-full:9999px;
+  --font-sans:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-primary);background:var(--bg-secondary);}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ── Top Bar ── */
+.topbar{height:52px;background:var(--bg-primary);border-bottom:1px solid var(--border-default);
+  display:flex;align-items:center;padding:0 20px;gap:16px;position:fixed;top:0;left:0;right:0;
+  z-index:100;box-shadow:0 1px 0 0 rgba(0,0,0,.05)}
+.tb-brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;min-width:200px;flex-shrink:0}
+.tb-brand-icon{width:28px;height:28px;background:var(--color-brand);border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.tb-search{flex:1;max-width:480px}
+.omni{display:flex;align-items:center;gap:8px;background:var(--bg-secondary);border:1px solid var(--border-default);
+  border-radius:var(--radius-full);padding:6px 14px}
+.omni input{flex:1;border:none;background:none;font-family:inherit;font-size:13px;color:var(--text-primary);outline:none}
+.omni input::placeholder{color:var(--text-tertiary)}
+.tb-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;
+  justify-content:center;color:var(--text-secondary);transition:background .15s;font-size:16px;cursor:pointer}
+.icon-btn:hover{background:var(--bg-secondary)}
+.avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-primary-100);
+  color:var(--color-primary-700);font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center}
+
+/* ── Side Nav ── */
+.sidenav{position:fixed;top:52px;left:0;bottom:0;width:200px;background:var(--bg-primary);
+  border-right:1px solid var(--border-default);padding:12px 8px;display:flex;flex-direction:column;
+  gap:2px;overflow-y:auto;z-index:90}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-md);
+  font-size:13.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.nav-item.active{background:var(--color-primary-50);color:var(--interactive)}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--color-error-500);color:#fff;font-size:10px;
+  font-weight:700;border-radius:var(--radius-full);padding:1px 5px;line-height:14px}
+.nav-divider{height:1px;background:var(--border-default);margin:8px 0}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-tertiary);padding:4px 10px 2px}
+.nav-spacer{flex:1}
+
+/* ── Main ── */
+.main{margin-left:200px;margin-top:52px;min-height:calc(100vh - 52px);padding-bottom:80px}
+
+/* ── Hero ── */
+.hero{background:var(--bg-primary);border-bottom:1px solid var(--border-default);padding:32px 40px 28px}
+.hero-greeting{font-size:22px;font-weight:600;margin-bottom:4px}
+.hero-date{font-size:13px;color:var(--text-tertiary);margin-bottom:24px}
+.hero-search{max-width:620px}
+.hero-search-box{display:flex;align-items:center;gap:10px;background:var(--bg-secondary);
+  border:1.5px solid var(--border-default);border-radius:var(--radius-xl);padding:10px 16px;
+  transition:border-color .15s,box-shadow .15s;cursor:text}
+.hero-search-box:focus-within{border-color:var(--interactive);box-shadow:0 0 0 3px var(--color-primary-100);background:var(--bg-primary)}
+.hero-search-icon{font-size:18px;color:var(--text-tertiary);flex-shrink:0}
+.hero-search-input{flex:1;border:none;background:none;font-family:inherit;font-size:15px;
+  color:var(--text-primary);outline:none}
+.hero-search-input::placeholder{color:var(--text-tertiary)}
+.hero-search-kbd{font-size:11px;color:var(--text-tertiary);background:var(--bg-secondary);
+  border:1px solid var(--border-default);border-radius:3px;padding:2px 6px;font-family:monospace;flex-shrink:0}
+.hero-prompts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hero-prompt{display:inline-flex;align-items:center;gap:6px;background:var(--bg-secondary);
+  border:1px solid var(--border-default);border-radius:var(--radius-full);padding:5px 12px;
+  font-size:12px;color:var(--text-secondary);cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.hero-prompt:hover{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive)}
+
+/* ── Quick Actions ── */
+.quick-actions{padding:16px 40px;background:var(--bg-primary);border-bottom:1px solid var(--border-default);
+  display:flex;align-items:center;gap:8px;overflow-x:auto}
+.qa-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;
+  color:var(--text-tertiary);white-space:nowrap;margin-right:4px}
+.qa-item{display:flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-secondary);
+  border:1px solid var(--border-default);border-radius:var(--radius-full);font-size:13px;
+  font-weight:500;color:var(--text-secondary);white-space:nowrap;cursor:pointer;transition:background .15s,color .15s}
+.qa-item:hover{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive)}
+.qa-item-icon{font-size:14px}
+
+/* ── Canvas ── */
+.canvas-area{padding:28px 40px}
+.canvas-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.canvas-title{font-size:13px;font-weight:600;color:var(--text-secondary)}
+.canvas-actions{display:flex;align-items:center;gap:8px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
+  font-weight:500;border-radius:var(--radius-lg);border:1px solid transparent;cursor:pointer;
+  transition:background .15s,border-color .15s;white-space:nowrap}
+.btn-primary{font-size:14px;padding:8px 16px;background:var(--interactive);border-color:var(--interactive);color:#fff}
+.btn-primary:hover{background:var(--interactive-hover)}
+.btn-secondary{font-size:14px;padding:8px 16px;background:var(--bg-primary);border-color:var(--border-default);color:var(--text-primary)}
+.btn-secondary:hover{background:var(--bg-secondary)}
+.btn-ghost{font-size:13px;padding:5px 10px;color:var(--text-secondary)}
+.btn-ghost:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.btn-sm{font-size:12px;padding:5px 12px;border-radius:var(--radius-md)}
+.btn-xs{font-size:11px;padding:3px 8px;border-radius:var(--radius-md)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
+  padding:2px 7px;border-radius:var(--radius-full);border:1px solid transparent}
+.badge-primary{background:var(--color-primary-50);color:var(--color-primary-700);border-color:var(--color-primary-100)}
+.badge-success{background:#e9ffe5;color:#1f6b0f;border-color:#8cf97a}
+.badge-warning{background:#fff7eb;color:var(--color-amber-500);border-color:#ffdc9d}
+.badge-error{background:#fff7f6;color:#be0003;border-color:#ffd8d0}
+.badge-neutral{background:var(--color-neutral-100);color:var(--color-neutral-700);border-color:var(--color-neutral-200)}
+.badge-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.divider{height:1px;background:var(--border-default)}
+
+/* ── Widget Grid ── */
+.widget-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.widget-grid .w-wide{grid-column:span 2}
+.widget-grid .w-full{grid-column:span 3}
+
+/* ── Widget Card ── */
+.wcard{background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-xl);
+  overflow:hidden;box-shadow:var(--shadow-xs);transition:box-shadow .15s}
+.wcard-header{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px 12px;border-bottom:1px solid var(--border-default)}
+.wcard-title{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--text-primary)}
+.wcard-icon{font-size:16px}
+.wcard-actions{display:flex;align-items:center;gap:4px}
+.wcard-body{padding:0}
+.wcard-body-pad{padding:14px 16px}
+
+/* Edit mode */
+.edit-mode .wcard{border:1.5px dashed var(--color-primary-200);box-shadow:none;position:relative}
+.edit-mode .wcard:hover{border-color:var(--interactive)}
+.drag-handle{display:none;align-items:center;justify-content:center;width:24px;height:24px;
+  color:var(--text-tertiary);cursor:grab;font-size:16px;border-radius:var(--radius-md)}
+.drag-handle:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.remove-btn{display:none;align-items:center;justify-content:center;width:22px;height:22px;
+  background:#fff;border:1px solid var(--border-default);border-radius:var(--radius-full);
+  color:var(--text-secondary);font-size:13px;cursor:pointer;transition:background .15s,color .15s}
+.remove-btn:hover{background:#fff7f6;border-color:#ffd8d0;color:#be0003}
+.pin-btn{display:none;align-items:center;justify-content:center;width:22px;height:22px;
+  background:#fff;border:1px solid var(--border-default);border-radius:var(--radius-full);
+  color:var(--text-secondary);font-size:11px;cursor:pointer;transition:background .15s}
+.pin-btn:hover{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive)}
+.pin-btn.pinned{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive)}
+.edit-mode .drag-handle,.edit-mode .remove-btn,.edit-mode .pin-btn{display:flex}
+
+/* Add widget card */
+.add-widget-card{background:var(--bg-secondary);border:1.5px dashed var(--color-primary-200);
+  border-radius:var(--radius-xl);display:none;align-items:center;justify-content:center;
+  flex-direction:column;gap:8px;min-height:160px;cursor:pointer;transition:background .15s,border-color .15s}
+.add-widget-card:hover{background:var(--color-primary-50);border-color:var(--interactive)}
+.edit-mode .add-widget-card{display:flex}
+
+/* ── Approval rows ── */
+.approval-row{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-default);transition:background .15s;cursor:pointer}
+.approval-row:last-child{border-bottom:none}
+.approval-row:hover{background:var(--bg-secondary)}
+.approval-icon{width:34px;height:34px;border-radius:var(--radius-lg);background:var(--color-primary-50);
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.approval-meta{flex:1;min-width:0}
+.approval-title{font-size:13.5px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.approval-sub{font-size:12px;color:var(--text-secondary)}
+.approval-age{font-size:11px;color:var(--text-tertiary);white-space:nowrap;flex-shrink:0;padding-top:2px}
+
+/* ── Task rows ── */
+.task-row{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-default)}
+.task-row:last-child{border-bottom:none}
+.task-check{width:16px;height:16px;border:1.5px solid var(--border-default);border-radius:3px;flex-shrink:0;cursor:pointer}
+.task-label{flex:1;font-size:13.5px}
+.task-due{font-size:11px;color:var(--text-tertiary)}
+
+/* ── Announcement rows ── */
+.ann-row{display:flex;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-default);cursor:pointer;transition:background .15s}
+.ann-row:last-child{border-bottom:none}
+.ann-row:hover{background:var(--bg-secondary)}
+.ann-thumb{width:48px;height:48px;border-radius:var(--radius-lg);object-fit:cover;flex-shrink:0;
+  background:linear-gradient(135deg,var(--color-primary-100),var(--color-primary-200));
+  display:flex;align-items:center;justify-content:center;font-size:22px}
+.ann-body{flex:1;min-width:0}
+.ann-title{font-size:13.5px;font-weight:500;margin-bottom:3px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.ann-meta{font-size:11px;color:var(--text-tertiary)}
+
+/* ── Quick links ── */
+.qlink-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 16px}
+.qlink{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 8px;
+  border-radius:var(--radius-lg);cursor:pointer;transition:background .15s;text-align:center}
+.qlink:hover{background:var(--bg-secondary)}
+.qlink-icon{width:40px;height:40px;border-radius:var(--radius-xl);display:flex;align-items:center;
+  justify-content:center;font-size:18px;border:1px solid var(--border-default);background:var(--bg-primary)}
+.qlink-label{font-size:11px;font-weight:500;color:var(--text-secondary);line-height:14px}
+
+/* ── Knowledge rows ── */
+.know-row{display:flex;align-items:flex-start;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-default);cursor:pointer;transition:background .15s}
+.know-row:last-child{border-bottom:none}
+.know-row:hover{background:var(--bg-secondary)}
+.know-cat{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--interactive);white-space:nowrap;padding-top:2px;flex-shrink:0;width:80px}
+.know-title{font-size:13px;color:var(--text-primary);line-height:18px}
+
+/* ── Activity feed ── */
+.activity-row{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border-default)}
+.activity-row:last-child{border-bottom:none}
+.activity-avatar{width:26px;height:26px;border-radius:var(--radius-full);background:var(--color-primary-100);
+  color:var(--color-primary-700);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.activity-text{font-size:13px;color:var(--text-secondary);line-height:18px;flex:1}
+.activity-text strong{color:var(--text-primary);font-weight:500}
+.activity-time{font-size:11px;color:var(--text-tertiary);flex-shrink:0;white-space:nowrap;padding-top:1px}
+
+/* ── Add widget panel ── */
+.add-panel-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;
+  align-items:flex-end;justify-content:center}
+.add-panel-overlay.open{display:flex}
+.add-panel{background:var(--bg-primary);border-radius:var(--radius-xl) var(--radius-xl) 0 0;
+  width:100%;max-width:800px;max-height:80vh;overflow-y:auto;padding:24px 28px 40px}
+.add-panel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.add-panel-title{font-size:17px;font-weight:600}
+.add-panel-close{width:32px;height:32px;border-radius:var(--radius-full);display:flex;align-items:center;
+  justify-content:center;color:var(--text-secondary);cursor:pointer;font-size:18px}
+.add-panel-close:hover{background:var(--bg-secondary)}
+.widget-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.widget-option{display:flex;align-items:center;gap:12px;padding:14px;border:1.5px solid var(--border-default);
+  border-radius:var(--radius-xl);cursor:pointer;transition:border-color .15s,background .15s}
+.widget-option:hover{border-color:var(--interactive);background:var(--color-primary-50)}
+.widget-option.added{border-color:var(--color-success-500);background:#e9ffe5}
+.widget-option-icon{width:40px;height:40px;border-radius:var(--radius-lg);background:var(--bg-secondary);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.widget-option-name{font-size:13.5px;font-weight:600;margin-bottom:2px}
+.widget-option-desc{font-size:12px;color:var(--text-secondary)}
+
+/* ── Pinned indicator ── */
+.pin-indicator{display:none;position:absolute;top:-8px;right:12px;background:var(--interactive);
+  color:#fff;font-size:10px;font-weight:600;padding:2px 8px;border-radius:var(--radius-full)}
+.edit-mode .wcard.is-pinned .pin-indicator{display:block}
+
+/* ── Edit mode banner ── */
+.edit-banner{display:none;background:var(--color-primary-50);border-bottom:1px solid var(--color-primary-100);
+  padding:10px 40px;align-items:center;gap:10px}
+.edit-banner.show{display:flex}
+.edit-banner-text{font-size:13px;color:var(--interactive);font-weight:500;flex:1}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="tb-brand">
+    <div class="tb-brand-icon">J</div>
+    Janus
+  </div>
+  <div class="tb-search">
+    <div class="omni">
+      <span style="color:var(--text-tertiary);font-size:14px;">🔍</span>
+      <input placeholder="Ask me anything or search…">
+      <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:3px;padding:1px 5px;font-family:monospace;">⌘K</span>
+    </div>
+  </div>
+  <div class="tb-actions">
+    <div class="icon-btn">🔔</div>
+    <div class="icon-btn">⊞</div>
+    <div class="icon-btn">❓</div>
+    <div class="avatar">AS</div>
+  </div>
+</header>
+
+<!-- SIDE NAV -->
+<nav class="sidenav">
+  <div class="nav-item active"><span class="nav-icon">🏠</span> Home</div>
+  <div class="nav-item"><span class="nav-icon">📋</span> Activity Hub <span class="nav-badge">5</span></div>
+  <div class="nav-item"><span class="nav-icon">🔔</span> Notifications</div>
+  <div class="nav-item"><span class="nav-icon">📚</span> Knowledge</div>
+  <div class="nav-item"><span class="nav-icon">👥</span> People</div>
+  <div class="nav-divider"></div>
+  <div class="nav-label">Catalog</div>
+  <div class="nav-item"><span class="nav-icon">💻</span> IT Services</div>
+  <div class="nav-item"><span class="nav-icon">🏢</span> HR Services</div>
+  <div class="nav-item"><span class="nav-icon">⚖️</span> Legal</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-item"><span class="nav-icon">⚙️</span> Settings</div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- Edit mode banner -->
+  <div class="edit-banner" id="editBanner">
+    <span style="font-size:15px;">✏️</span>
+    <span class="edit-banner-text">You're in edit mode — drag to reorder, pin to keep a widget fixed, or remove widgets you don't need.</span>
+    <button class="btn btn-primary btn-sm" onclick="exitEditMode()">Done</button>
+  </div>
+
+  <!-- ── HERO: Greeting + Search ── -->
+  <div class="hero">
+    <div class="hero-greeting" id="greeting">Good morning, Abhishek 👋</div>
+    <div class="hero-date" id="heroDate"></div>
+    <div class="hero-search">
+      <div class="hero-search-box">
+        <span class="hero-search-icon">✦</span>
+        <input class="hero-search-input" placeholder="Ask Now Assist anything…">
+        <span class="hero-search-kbd">⌘K</span>
+      </div>
+      <div class="hero-prompts">
+        <span class="hero-prompt">📋 What's pending my approval?</span>
+        <span class="hero-prompt">🖥️ Request a new laptop</span>
+        <span class="hero-prompt">🏖️ Check my PTO balance</span>
+        <span class="hero-prompt">📄 Find an IT policy</span>
+        <span class="hero-prompt">👤 Who's my IT contact?</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUICK ACTIONS ── -->
+  <div class="quick-actions">
+    <span class="qa-label">Recent</span>
+    <div class="qa-item"><span class="qa-item-icon">💻</span> Laptop replacement</div>
+    <div class="qa-item"><span class="qa-item-icon">📄</span> Expense report Q1</div>
+    <div class="qa-item"><span class="qa-item-icon">🏖️</span> PTO request — Mar 15</div>
+    <div class="qa-item"><span class="qa-item-icon">🔑</span> VPN access request</div>
+  </div>
+
+  <!-- ── CANVAS ── -->
+  <div class="canvas-area">
+    <div class="canvas-header">
+      <span class="canvas-title">MY WORKSPACE</span>
+      <div class="canvas-actions">
+        <button class="btn btn-secondary btn-sm" id="personalizeBtn" onclick="enterEditMode()">✏️ Personalize</button>
+      </div>
+    </div>
+
+    <div class="widget-grid" id="widgetGrid">
+
+      <!-- Approvals (wide) -->
+      <div class="wcard w-wide" id="w-approvals">
+        <div style="position:relative">
+          <span class="pin-indicator">📌 Pinned</span>
+        </div>
+        <div class="wcard-header">
+          <div class="wcard-title">
+            <span class="wcard-icon">✅</span>
+            Pending Approvals
+            <span class="badge badge-error" style="margin-left:4px;">3</span>
+          </div>
+          <div class="wcard-actions">
+            <div class="drag-handle" title="Drag to reorder">⠿</div>
+            <div class="pin-btn pinned is-pinned" title="Pinned" onclick="togglePin(this)">📌</div>
+            <button class="btn btn-ghost btn-xs">View all →</button>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="approval-row">
+            <div class="approval-icon">💻</div>
+            <div class="approval-meta">
+              <div class="approval-title">Laptop replacement — John Doe</div>
+              <div class="approval-sub">IT Hardware · MacBook Pro 14" · $1,899</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+              <button class="btn btn-primary btn-xs">Approve</button>
+              <button class="btn btn-secondary btn-xs">Reject</button>
+              <span class="approval-age">2h ago</span>
+            </div>
+          </div>
+          <div class="approval-row">
+            <div class="approval-icon">🏖️</div>
+            <div class="approval-meta">
+              <div class="approval-title">PTO request — Sarah Chen</div>
+              <div class="approval-sub">Mar 20–24 · 5 days · Coverage confirmed</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+              <button class="btn btn-primary btn-xs">Approve</button>
+              <button class="btn btn-secondary btn-xs">Reject</button>
+              <span class="approval-age">5h ago</span>
+            </div>
+          </div>
+          <div class="approval-row">
+            <div class="approval-icon">💳</div>
+            <div class="approval-meta">
+              <div class="approval-title">Software license — Adobe Creative</div>
+              <div class="approval-sub">Annual · $599 · Design team</div>
+            </div>
+            <div style="display:flex;gap:6px;align-items:center;flex-shrink:0;">
+              <button class="btn btn-primary btn-xs">Approve</button>
+              <button class="btn btn-secondary btn-xs">Reject</button>
+              <span class="approval-age">1d ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- My Tasks -->
+      <div class="wcard" id="w-tasks">
+        <div class="wcard-header">
+          <div class="wcard-title"><span class="wcard-icon">📝</span> My Tasks</div>
+          <div class="wcard-actions">
+            <div class="drag-handle">⠿</div>
+            <div class="pin-btn" title="Pin widget" onclick="togglePin(this)">📌</div>
+            <div class="remove-btn" title="Remove widget" onclick="removeWidget(this)">✕</div>
+            <button class="btn btn-ghost btn-xs">+ Add</button>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-label">Review Q1 OKRs with team</div>
+            <span class="badge badge-warning" style="font-size:10px;">Today</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-label">Submit expense report</div>
+            <span class="task-due">Mar 21</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check" style="background:var(--color-success-500);border-color:var(--color-success-500);"></div>
+            <div class="task-label" style="text-decoration:line-through;color:var(--text-tertiary);">Update project timeline</div>
+            <span class="task-due" style="color:var(--color-success-500);">Done</span>
+          </div>
+          <div class="task-row">
+            <div class="task-check"></div>
+            <div class="task-label">Prepare onboarding materials</div>
+            <span class="task-due">Mar 25</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Announcements -->
+      <div class="wcard" id="w-announcements">
+        <div class="wcard-header">
+          <div class="wcard-title"><span class="wcard-icon">📣</span> Announcements</div>
+          <div class="wcard-actions">
+            <div class="drag-handle">⠿</div>
+            <div class="pin-btn" title="Pin widget" onclick="togglePin(this)">📌</div>
+            <div class="remove-btn" title="Remove widget" onclick="removeWidget(this)">✕</div>
+            <button class="btn btn-ghost btn-xs">View all →</button>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="ann-row">
+            <div class="ann-thumb">🎉</div>
+            <div class="ann-body">
+              <div class="ann-title">All-hands on March 26 — register now for virtual attendance</div>
+              <div class="ann-meta">HR · 1 day ago</div>
+            </div>
+          </div>
+          <div class="ann-row">
+            <div class="ann-thumb">🔒</div>
+            <div class="ann-body">
+              <div class="ann-title">New security policy: mandatory MFA for all remote access starting April 1</div>
+              <div class="ann-meta">IT Security · 2 days ago</div>
+            </div>
+          </div>
+          <div class="ann-row">
+            <div class="ann-thumb">🏢</div>
+            <div class="ann-body">
+              <div class="ann-title">Office parking garage maintenance — expect delays Mar 22–24</div>
+              <div class="ann-meta">Facilities · 3 days ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="wcard" id="w-quicklinks">
+        <div class="wcard-header">
+          <div class="wcard-title"><span class="wcard-icon">🔗</span> Quick Links</div>
+          <div class="wcard-actions">
+            <div class="drag-handle">⠿</div>
+            <div class="pin-btn" title="Pin widget" onclick="togglePin(this)">📌</div>
+            <div class="remove-btn" title="Remove widget" onclick="removeWidget(this)">✕</div>
+            <button class="btn btn-ghost btn-xs">Edit links</button>
+          </div>
+        </div>
+        <div class="qlink-grid">
+          <div class="qlink"><div class="qlink-icon">🖥️</div><div class="qlink-label">New IT Request</div></div>
+          <div class="qlink"><div class="qlink-icon">🏖️</div><div class="qlink-label">Request PTO</div></div>
+          <div class="qlink"><div class="qlink-icon">💳</div><div class="qlink-label">Expense Report</div></div>
+          <div class="qlink"><div class="qlink-icon">📋</div><div class="qlink-label">My Requests</div></div>
+          <div class="qlink"><div class="qlink-icon">📄</div><div class="qlink-label">Pay Stubs</div></div>
+          <div class="qlink"><div class="qlink-icon">🎓</div><div class="qlink-label">Learning</div></div>
+          <div class="qlink"><div class="qlink-icon">👥</div><div class="qlink-label">Org Chart</div></div>
+          <div class="qlink"><div class="qlink-icon">➕</div><div class="qlink-label" style="color:var(--interactive)">Add link</div></div>
+        </div>
+      </div>
+
+      <!-- Knowledge -->
+      <div class="wcard" id="w-knowledge">
+        <div class="wcard-header">
+          <div class="wcard-title"><span class="wcard-icon">📚</span> Knowledge</div>
+          <div class="wcard-actions">
+            <div class="drag-handle">⠿</div>
+            <div class="pin-btn" title="Pin widget" onclick="togglePin(this)">📌</div>
+            <div class="remove-btn" title="Remove widget" onclick="removeWidget(this)">✕</div>
+            <button class="btn btn-ghost btn-xs">Browse →</button>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="know-row">
+            <div class="know-cat">IT</div>
+            <div class="know-title">How to set up VPN on Mac and Windows</div>
+          </div>
+          <div class="know-row">
+            <div class="know-cat">HR</div>
+            <div class="know-title">2026 Benefits enrollment guide and deadlines</div>
+          </div>
+          <div class="know-row">
+            <div class="know-cat">Finance</div>
+            <div class="know-title">Expense reimbursement policy — updated Jan 2026</div>
+          </div>
+          <div class="know-row">
+            <div class="know-cat">IT</div>
+            <div class="know-title">Approved software list for engineering teams</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="wcard" id="w-activity">
+        <div class="wcard-header">
+          <div class="wcard-title"><span class="wcard-icon">🕐</span> Recent Activity</div>
+          <div class="wcard-actions">
+            <div class="drag-handle">⠿</div>
+            <div class="pin-btn" title="Pin widget" onclick="togglePin(this)">📌</div>
+            <div class="remove-btn" title="Remove widget" onclick="removeWidget(this)">✕</div>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="activity-row">
+            <div class="activity-avatar">JD</div>
+            <div class="activity-text"><strong>John Doe</strong> submitted a laptop request requiring your approval</div>
+            <div class="activity-time">2h ago</div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-avatar">AS</div>
+            <div class="activity-text">You approved <strong>Sarah Chen's</strong> access request for Salesforce</div>
+            <div class="activity-time">Yesterday</div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-avatar">IT</div>
+            <div class="activity-text"><strong>IT Support</strong> resolved your ticket: Outlook sync issue</div>
+            <div class="activity-time">2d ago</div>
+          </div>
+          <div class="activity-row">
+            <div class="activity-avatar">HR</div>
+            <div class="activity-text"><strong>HR</strong> updated your PTO balance for Q1 2026</div>
+            <div class="activity-time">3d ago</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add widget placeholder (shown in edit mode) -->
+      <div class="add-widget-card" id="addWidgetCard" onclick="openAddPanel()">
+        <div style="font-size:28px;opacity:.4">＋</div>
+        <div style="font-size:14px;font-weight:500;color:var(--text-secondary)">Add widget</div>
+        <div style="font-size:12px;color:var(--text-tertiary)">Browse available widgets</div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- ── ADD WIDGET PANEL ── -->
+<div class="add-panel-overlay" id="addPanelOverlay" onclick="closeAddPanel(event)">
+  <div class="add-panel" onclick="event.stopPropagation()">
+    <div class="add-panel-header">
+      <div class="add-panel-title">Add widgets to your workspace</div>
+      <div class="add-panel-close" onclick="closeAddPanel()">✕</div>
+    </div>
+    <div class="widget-picker">
+      <div class="widget-option added">
+        <div class="widget-option-icon">✅</div>
+        <div><div class="widget-option-name">Approvals</div><div class="widget-option-desc">Pending items needing your review</div></div>
+      </div>
+      <div class="widget-option added">
+        <div class="widget-option-icon">📝</div>
+        <div><div class="widget-option-name">My Tasks</div><div class="widget-option-desc">Your open to-dos and deadlines</div></div>
+      </div>
+      <div class="widget-option added">
+        <div class="widget-option-icon">📣</div>
+        <div><div class="widget-option-name">Announcements</div><div class="widget-option-desc">Company and team news</div></div>
+      </div>
+      <div class="widget-option added">
+        <div class="widget-option-icon">🔗</div>
+        <div><div class="widget-option-name">Quick Links</div><div class="widget-option-desc">Your pinned shortcuts</div></div>
+      </div>
+      <div class="widget-option added">
+        <div class="widget-option-icon">📚</div>
+        <div><div class="widget-option-name">Knowledge</div><div class="widget-option-desc">Suggested articles and guides</div></div>
+      </div>
+      <div class="widget-option added">
+        <div class="widget-option-icon">🕐</div>
+        <div><div class="widget-option-name">Recent Activity</div><div class="widget-option-desc">Your latest actions and updates</div></div>
+      </div>
+      <div class="widget-option" onclick="this.classList.toggle('added')">
+        <div class="widget-option-icon">👥</div>
+        <div><div class="widget-option-name">My Team</div><div class="widget-option-desc">Team availability and contacts</div></div>
+      </div>
+      <div class="widget-option" onclick="this.classList.toggle('added')">
+        <div class="widget-option-icon">📊</div>
+        <div><div class="widget-option-name">My Cases</div><div class="widget-option-desc">Open tickets and their status</div></div>
+      </div>
+      <div class="widget-option" onclick="this.classList.toggle('added')">
+        <div class="widget-option-icon">🎓</div>
+        <div><div class="widget-option-name">Learning</div><div class="widget-option-desc">Courses and training assigned to you</div></div>
+      </div>
+      <div class="widget-option" onclick="this.classList.toggle('added')">
+        <div class="widget-option-icon">📅</div>
+        <div><div class="widget-option-name">Calendar</div><div class="widget-option-desc">Today's meetings and upcoming events</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Greeting
+(function(){
+  const h = new Date().getHours();
+  const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+  document.getElementById('greeting').textContent = g + ', Abhishek 👋';
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const d = new Date();
+  document.getElementById('heroDate').textContent =
+    days[d.getDay()] + ', ' + months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+})();
+
+function enterEditMode() {
+  document.getElementById('widgetGrid').classList.add('edit-mode');
+  document.getElementById('editBanner').classList.add('show');
+  document.getElementById('personalizeBtn').style.display = 'none';
+}
+
+function exitEditMode() {
+  document.getElementById('widgetGrid').classList.remove('edit-mode');
+  document.getElementById('editBanner').classList.remove('show');
+  document.getElementById('personalizeBtn').style.display = '';
+}
+
+function removeWidget(btn) {
+  const card = btn.closest('.wcard');
+  card.style.transition = 'opacity .2s, transform .2s';
+  card.style.opacity = '0';
+  card.style.transform = 'scale(.95)';
+  setTimeout(() => card.remove(), 200);
+}
+
+function togglePin(btn) {
+  btn.classList.toggle('pinned');
+  const card = btn.closest('.wcard');
+  card.classList.toggle('is-pinned');
+  const indicator = card.querySelector('.pin-indicator');
+  if (indicator) indicator.style.display = card.classList.contains('is-pinned') ? 'block' : '';
+}
+
+function openAddPanel() {
+  document.getElementById('addPanelOverlay').classList.add('open');
+}
+
+function closeAddPanel(e) {
+  if (!e || e.target === document.getElementById('addPanelOverlay')) {
+    document.getElementById('addPanelOverlay').classList.remove('open');
+  }
+}
+</script>
+</body>
+</html>
