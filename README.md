@@ -20,6 +20,4 @@ That's it. Claude generates a `.html` file you can open in any browser.
 
 ---
 
-## Design contacts
 
-For official design sign-off: Sumit, Paridhi, Parvati, Zoe
