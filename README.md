@@ -22,10 +22,13 @@ npm install -g @anthropic/claude-code
 Then run `claude` once to log in with your Anthropic account.
 
 **Step 3 — Open the folder in Claude Code**
+
+On Mac, open Terminal, then drag the unzipped folder into the Terminal window and press Enter. Then type:
 ```
-cd janus-pattern-library-main
 claude
 ```
+
+This is important — Claude needs to be opened *inside* the folder so it can read the Janus design system context automatically.
 
 ---
 
