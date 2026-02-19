@@ -72,7 +72,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
   border-radius:3px;padding:1px 6px;font-weight:500}
 .copy-btn{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
   color:var(--interactive);background:var(--color-primary-50);border:1px solid var(--color-primary-100);
-  border-radius:var(--radius-md);padding:4px 10px;cursor:pointer;transition:background .15s;font-family:inherit}
+  border-radius:var(--radius-md);padding:4px 10px;cursor:pointer;transition:background .15s;font-family:inherit;text-decoration:none}
 .copy-btn:hover{background:var(--color-primary-100)}
 .copy-btn.copied{color:var(--color-success-500);background:#e9ffe5;border-color:#8cf97a}
 
@@ -126,6 +126,171 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .divider{height:1px;background:var(--border-default);margin:12px 0}
 </style>
+
+<!-- Snippet strings stored in JS — never in HTML attributes -->
+<script>
+const SNIPS = {
+  'btn-primary': `<button class="btn btn-primary">Primary action</button>`,
+
+  'btn-secondary': `<button class="btn btn-secondary">Secondary</button>`,
+
+  'btn-outline-ghost': `<button class="btn btn-outline">Outline</button>
+<button class="btn btn-ghost">Ghost</button>`,
+
+  'btn-danger': `<button class="btn btn-danger">Delete</button>`,
+
+  'btn-approve-row': `<div style="display:flex;gap:8px;">
+  <button class="btn btn-primary btn-sm">✓ Approve</button>
+  <button class="btn btn-secondary btn-sm">✕ Reject</button>
+  <button class="btn btn-ghost btn-sm">View details</button>
+</div>`,
+
+  'badge-status': `<span class="badge badge-primary badge-dot">In Progress</span>
+<span class="badge badge-success badge-dot">Approved</span>
+<span class="badge badge-warning badge-dot">Pending</span>
+<span class="badge badge-error badge-dot">Rejected</span>
+<span class="badge badge-neutral badge-dot">Closed</span>`,
+
+  'chip-filter': `<span class="chip active">All</span>
+<span class="chip">Approvals</span>
+<span class="chip">IT Requests</span>
+<span class="chip">HR Tasks</span>`,
+
+  'avatar': `<div class="avatar" style="width:36px;height:36px;font-size:13px;">AS</div>`,
+
+  'input-text': `<div style="display:flex;flex-direction:column;gap:4px;">
+  <label style="font-size:13px;font-weight:500;">Field label</label>
+  <input class="input" placeholder="Placeholder text…">
+  <span style="font-size:12px;color:var(--text-secondary);">Helper text</span>
+</div>`,
+
+  'omni-search': `<div style="display:flex;align-items:center;gap:8px;background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-full);padding:6px 14px;">
+  <span style="color:var(--text-tertiary);">🔍</span>
+  <input style="flex:1;border:none;background:none;font-family:inherit;font-size:13px;outline:none;" placeholder="Ask me anything or search…">
+</div>`,
+
+  'toggle': `<label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+  <label class="toggle">
+    <input type="checkbox" checked>
+    <div class="toggle-track"></div>
+    <div class="toggle-thumb"></div>
+  </label>
+  <span style="font-size:13px;font-weight:500;">Enabled</span>
+</label>`,
+
+  'tabs': `<div class="tabs">
+  <div class="tab active">All</div>
+  <div class="tab">Approvals</div>
+  <div class="tab">Requests</div>
+</div>`,
+
+  'select': `<select class="input" style="cursor:pointer;">
+  <option>Option one</option>
+  <option>Option two</option>
+  <option>Option three</option>
+</select>`,
+
+  'card-basic': `<div class="card">
+  <div style="font-size:15px;font-weight:600;margin-bottom:4px;">Card title</div>
+  <div style="font-size:13px;color:var(--text-secondary);margin-bottom:12px;">Description</div>
+  <span class="badge badge-primary badge-dot">In Progress</span>
+</div>`,
+
+  'widget-card': `<div class="widget-card">
+  <div class="widget-header">
+    <span class="widget-title">📋 Widget Title</span>
+    <button class="btn btn-ghost" style="font-size:12px;">View all →</button>
+  </div>
+  <div class="widget-body">
+    Widget content here
+  </div>
+</div>`,
+
+  'skeleton': `<div style="display:flex;flex-direction:column;gap:8px;">
+  <div class="skeleton" style="height:14px;width:60%;"></div>
+  <div class="skeleton" style="height:12px;width:80%;"></div>
+  <div class="skeleton" style="height:12px;width:40%;"></div>
+</div>`,
+
+  'progress-bar': `<div class="progress-bar">
+  <div class="progress-fill" style="width:62%;"></div>
+</div>`,
+
+  'nav-items': `<div class="nav-item active">
+  <span class="nav-icon">🏠</span> Home
+</div>
+<div class="nav-item">
+  <span class="nav-icon">📋</span> Activity Hub
+  <span class="nav-badge">3</span>
+</div>`,
+
+  'breadcrumb': `<div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);margin-bottom:12px;">
+  <a href="#" style="color:var(--interactive);">Settings</a> ›
+  <span>Page Name</span>
+</div>
+<h1 style="font-size:24px;font-weight:600;margin-bottom:4px;">Page Title</h1>
+<p style="font-size:14px;color:var(--text-secondary);">One-sentence subtitle</p>`,
+
+  'headings': `<h2 style="font-size:24px;font-weight:600;line-height:32px;margin-bottom:4px;">Section Title</h2>
+<p style="font-size:14px;color:var(--text-secondary);">Supporting description.</p>`,
+
+  'body-text': `<p style="font-size:14px;line-height:20px;">Primary body text</p>
+<p style="font-size:13px;color:var(--text-secondary);">Secondary text</p>
+<p style="font-size:12px;color:var(--text-tertiary);">Caption / helper text</p>`,
+
+  'callout': `<div class="callout">
+  <span style="font-size:15px;flex-shrink:0;">ℹ️</span>
+  <span>Your message here</span>
+</div>`,
+
+  'empty-state': `<div class="empty-state">
+  <div style="font-size:40px;opacity:.4;">📋</div>
+  <div style="font-size:15px;font-weight:500;">No active tasks</div>
+  <div style="font-size:13px;color:var(--text-secondary);max-width:260px;text-align:center;">Description of empty state here.</div>
+  <button class="btn btn-outline btn-sm">Take action</button>
+</div>`,
+
+  'divider': `<div class="divider"></div>`,
+
+  'ai-summary': `<div class="ai-summary">
+  <div style="font-size:11px;font-weight:600;color:var(--color-primary-700);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;">✦ AI Summary</div>
+  <div style="font-size:13px;color:var(--text-secondary);line-height:18px;">Your AI-generated summary here.</div>
+</div>`,
+
+  'chat-bubbles': `<!-- AI message -->
+<div style="display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;">
+  <div style="width:24px;height:24px;border-radius:50%;background:var(--color-primary-100);color:var(--color-primary-700);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">A</div>
+  <div style="background:var(--bg-secondary);padding:8px 12px;border-radius:8px 8px 8px 2px;font-size:13px;max-width:80%;">AI message here</div>
+</div>
+<!-- User message -->
+<div style="display:flex;gap:8px;align-items:flex-end;flex-direction:row-reverse;">
+  <div style="width:24px;height:24px;border-radius:50%;background:var(--color-neutral-200);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">AS</div>
+  <div style="background:var(--interactive);color:#fff;padding:8px 12px;border-radius:8px 8px 2px 8px;font-size:13px;max-width:80%;">User message</div>
+</div>`,
+
+  'notif-row': `<div class="notif-item unread">
+  <div class="notif-dot"></div>
+  <div class="avatar" style="width:28px;height:28px;font-size:11px;flex-shrink:0;">JD</div>
+  <div style="flex:1;min-width:0;">
+    <div style="font-size:13.5px;font-weight:500;margin-bottom:2px;">Notification title</div>
+    <div style="font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Supporting detail</div>
+  </div>
+  <div style="font-size:11px;color:var(--text-tertiary);white-space:nowrap;">2m ago</div>
+</div>`,
+
+  'task-row': `<div style="display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-default);">
+  <div style="width:36px;height:36px;border-radius:8px;background:var(--color-primary-50);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">💻</div>
+  <div style="flex:1;">
+    <div style="font-size:13.5px;font-weight:500;margin-bottom:2px;">Task title — Person Name</div>
+    <div style="font-size:12px;color:var(--text-secondary);">Category · Status</div>
+  </div>
+  <div style="display:flex;gap:6px;flex-shrink:0;">
+    <button class="btn btn-primary btn-xs">Approve</button>
+    <button class="btn btn-secondary btn-xs">Reject</button>
+  </div>
+</div>`
+};
+</script>
 </head>
 <body>
 
@@ -136,19 +301,19 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
 
   <div class="sb-section">Actions</div>
   <a class="sb-link active" href="#buttons" onclick="setActive(this)">Buttons <span class="sb-count">5</span></a>
-  <a class="sb-link" href="#badges" onclick="setActive(this)">Badges &amp; Chips <span class="sb-count">8</span></a>
+  <a class="sb-link" href="#badges" onclick="setActive(this)">Badges &amp; Chips <span class="sb-count">3</span></a>
   <a class="sb-link" href="#inputs" onclick="setActive(this)">Inputs &amp; Forms <span class="sb-count">5</span></a>
 
   <div class="sb-section">Display</div>
-  <a class="sb-link" href="#cards" onclick="setActive(this)">Cards &amp; Widgets <span class="sb-count">6</span></a>
-  <a class="sb-link" href="#navigation" onclick="setActive(this)">Navigation <span class="sb-count">4</span></a>
-  <a class="sb-link" href="#typography" onclick="setActive(this)">Typography <span class="sb-count">6</span></a>
-  <a class="sb-link" href="#feedback" onclick="setActive(this)">Feedback &amp; Status <span class="sb-count">5</span></a>
+  <a class="sb-link" href="#cards" onclick="setActive(this)">Cards &amp; Widgets <span class="sb-count">4</span></a>
+  <a class="sb-link" href="#navigation" onclick="setActive(this)">Navigation <span class="sb-count">2</span></a>
+  <a class="sb-link" href="#typography" onclick="setActive(this)">Typography <span class="sb-count">2</span></a>
+  <a class="sb-link" href="#feedback" onclick="setActive(this)">Feedback &amp; Status <span class="sb-count">3</span></a>
 
   <div class="sb-section">Patterns</div>
-  <a class="sb-link" href="#ai" onclick="setActive(this)">AI Patterns <span class="sb-count">4</span></a>
-  <a class="sb-link" href="#lists" onclick="setActive(this)">List Items <span class="sb-count">4</span></a>
-  <a class="sb-link" href="#layout" onclick="setActive(this)">Layout Shells <span class="sb-count">2</span></a>
+  <a class="sb-link" href="#ai" onclick="setActive(this)">AI Patterns <span class="sb-count">2</span></a>
+  <a class="sb-link" href="#lists" onclick="setActive(this)">List Items <span class="sb-count">2</span></a>
+  <a class="sb-link" href="#layout" onclick="setActive(this)">Layout Shells <span class="sb-count">1</span></a>
 
   <div style="margin-top:auto;padding:16px">
     <div style="font-size:11px;color:rgba(255,255,255,.3);line-height:16px;">
@@ -176,7 +341,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Primary Button</div><span class="snip-tag">btn-primary</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<button class=\"btn btn-primary\">Primary action</button>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'btn-primary')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -186,7 +351,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Secondary Button</div><span class="snip-tag">btn-secondary</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<button class=\"btn btn-secondary\">Secondary</button>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'btn-secondary')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -197,7 +362,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Outline &amp; Ghost</div><span class="snip-tag">btn-outline / btn-ghost</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<button class=\"btn btn-outline\">Outline</button>\n<button class=\"btn btn-ghost\">Ghost</button>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'btn-outline-ghost')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -207,7 +372,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Danger Button</div><span class="snip-tag">btn-danger</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<button class=\"btn btn-danger\">Delete</button>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'btn-danger')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -219,7 +384,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Approval Action Row</div><span class="snip-tag">pattern</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;gap:8px;\">\n  <button class=\"btn btn-primary btn-sm\">✓ Approve</button>\n  <button class=\"btn btn-secondary btn-sm\">✕ Reject</button>\n  <button class=\"btn btn-ghost btn-sm\">View details</button>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'btn-approve-row')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -241,7 +406,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Status Badges</div><span class="snip-tag">badge + badge-dot</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<span class=\"badge badge-primary badge-dot\">In Progress</span>\n<span class=\"badge badge-success badge-dot\">Approved</span>\n<span class=\"badge badge-warning badge-dot\">Pending</span>\n<span class=\"badge badge-error badge-dot\">Rejected</span>\n<span class=\"badge badge-neutral badge-dot\">Closed</span>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'badge-status')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -254,7 +419,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Filter Chips</div><span class="snip-tag">chip</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<span class=\"chip active\">All</span>\n<span class=\"chip\">Approvals</span>\n<span class=\"chip\">IT Requests</span>\n<span class=\"chip\">HR Tasks</span>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'chip-filter')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -267,7 +432,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Avatars</div><span class="snip-tag">avatar</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"avatar\" style=\"width:36px;height:36px;font-size:13px;\">AS</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'avatar')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -287,7 +452,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Text Input</div><span class="snip-tag">input</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;flex-direction:column;gap:4px;\">\n  <label style=\"font-size:13px;font-weight:500;\">Field label</label>\n  <input class=\"input\" placeholder=\"Placeholder text…\">\n  <span style=\"font-size:12px;color:var(--text-secondary);\">Helper text</span>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'input-text')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -300,7 +465,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Omni Search Bar</div><span class="snip-tag">omni-bar</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;align-items:center;gap:8px;background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-full);padding:6px 14px;\">\n  <span style=\"color:var(--text-tertiary);\">🔍</span>\n  <input style=\"flex:1;border:none;background:none;font-family:inherit;font-size:13px;outline:none;\" placeholder=\"Ask me anything or search…\">\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'omni-search')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -317,12 +482,12 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Toggle Switch</div><span class="snip-tag">toggle</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<label style=\"display:flex;align-items:center;gap:8px;cursor:pointer;\">\n  <label class=\"toggle\">\n    <input type=\"checkbox\" checked>\n    <div class=\"toggle-track\"></div>\n    <div class=\"toggle-thumb\"></div>\n  </label>\n  <span style=\"font-size:13px;font-weight:500;\">Enabled</span>\n</label>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'toggle')">📋 Copy HTML</button>
         </div>
       </div>
 
       <div class="snip-card" data-tags="tabs tab navigation switcher">
-        <div class="snip-preview" style="flex-direction:column;align-items:stretch;gap:0;">
+        <div class="snip-preview" style="flex-direction:column;align-items:stretch;">
           <div class="tabs">
             <div class="tab active">All</div>
             <div class="tab">Approvals <span class="badge badge-error" style="margin-left:4px;">3</span></div>
@@ -331,7 +496,21 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Tabs</div><span class="snip-tag">tabs / tab</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"tabs\">\n  <div class=\"tab active\">All</div>\n  <div class=\"tab\">Approvals</div>\n  <div class=\"tab\">Requests</div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'tabs')">📋 Copy HTML</button>
+        </div>
+      </div>
+
+      <div class="snip-card" data-tags="select dropdown picker options">
+        <div class="snip-preview" style="flex-direction:column;align-items:stretch;">
+          <select class="input" style="cursor:pointer;">
+            <option>Option one</option>
+            <option>Option two</option>
+            <option>Option three</option>
+          </select>
+        </div>
+        <div class="snip-footer">
+          <div><div class="snip-name">Select / Dropdown</div><span class="snip-tag">input (select)</span></div>
+          <button class="copy-btn" onclick="copySnip(this,'select')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -353,7 +532,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Basic Card</div><span class="snip-tag">card</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"card\">\n  <div style=\"font-size:15px;font-weight:600;margin-bottom:4px;\">Card title</div>\n  <div style=\"font-size:13px;color:var(--text-secondary);margin-bottom:12px;\">Description</div>\n  <span class=\"badge badge-primary badge-dot\">In Progress</span>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'card-basic')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -366,7 +545,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Canvas Widget</div><span class="snip-tag">widget-card</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"widget-card\">\n  <div class=\"widget-header\">\n    <span class=\"widget-title\">📋 Widget Title</span>\n    <button class=\"btn btn-ghost\" style=\"font-size:12px;\">View all →</button>\n  </div>\n  <div class=\"widget-body\">\n    Widget content here\n  </div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'widget-card')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -378,7 +557,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Skeleton Loader</div><span class="snip-tag">skeleton</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;flex-direction:column;gap:8px;\">\n  <div class=\"skeleton\" style=\"height:14px;width:60%;\"></div>\n  <div class=\"skeleton\" style=\"height:12px;width:80%;\"></div>\n  <div class=\"skeleton\" style=\"height:12px;width:40%;\"></div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'skeleton')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -389,7 +568,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Progress Bar</div><span class="snip-tag">progress-bar</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"progress-bar\">\n  <div class=\"progress-fill\" style=\"width:62%;\"></div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'progress-bar')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -413,11 +592,11 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Nav Items</div><span class="snip-tag">nav-item</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"nav-item active\">\n  <span class=\"nav-icon\">🏠</span> Home\n</div>\n<div class=\"nav-item\">\n  <span class=\"nav-icon\">📋</span> Activity Hub\n  <span class=\"nav-badge\">3</span>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'nav-items')">📋 Copy HTML</button>
         </div>
       </div>
 
-      <div class="snip-card" data-tags="breadcrumb page trail path back">
+      <div class="snip-card" data-tags="breadcrumb page trail path back title">
         <div class="snip-preview" style="flex-direction:column;align-items:flex-start;gap:4px;">
           <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);">
             <a href="#" style="color:var(--interactive);">Settings</a>
@@ -428,7 +607,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Breadcrumb + Title</div><span class="snip-tag">breadcrumb</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);margin-bottom:12px;\">\n  <a href=\"#\" style=\"color:var(--interactive);\">Settings</a> ›\n  <span>Page Name</span>\n</div>\n<h1 style=\"font-size:24px;font-weight:600;margin-bottom:4px;\">Page Title</h1>\n<p style=\"font-size:14px;color:var(--text-secondary);\">One-sentence subtitle</p>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'breadcrumb')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -448,7 +627,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Headings</div><span class="snip-tag">H4–H6</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<h2 style=\"font-size:24px;font-weight:600;line-height:32px;margin-bottom:4px;\">Section Title</h2>\n<p style=\"font-size:14px;color:var(--text-secondary);\">Supporting description.</p>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'headings')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -460,7 +639,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Body Text</div><span class="snip-tag">body / secondary / caption</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<p style=\"font-size:14px;line-height:20px;\">Primary body text</p>\n<p style=\"font-size:13px;color:var(--text-secondary);\">Secondary text</p>\n<p style=\"font-size:12px;color:var(--text-tertiary);\">Caption / helper text</p>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'body-text')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -473,12 +652,12 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
     <div class="snip-grid">
 
       <div class="snip-card" data-tags="callout info alert note banner">
-        <div class="snip-preview" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <div class="snip-preview" style="flex-direction:column;align-items:stretch;">
           <div class="callout"><span style="font-size:15px;flex-shrink:0;">ℹ️</span><span>Info callout — use for tips, constraints, or context</span></div>
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Info Callout</div><span class="snip-tag">callout</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"callout\">\n  <span style=\"font-size:15px;flex-shrink:0;\">ℹ️</span>\n  <span>Your message here</span>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'callout')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -493,7 +672,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Empty State</div><span class="snip-tag">empty-state</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"empty-state\">\n  <div style=\"font-size:40px;opacity:.4;\">📋</div>\n  <div style=\"font-size:15px;font-weight:500;\">No active tasks</div>\n  <div style=\"font-size:13px;color:var(--text-secondary);max-width:260px;text-align:center;\">Description of empty state here.</div>\n  <button class=\"btn btn-outline btn-sm\">Take action</button>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'empty-state')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -505,7 +684,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Divider</div><span class="snip-tag">divider</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"divider\"></div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'divider')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -526,11 +705,11 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">AI Summary Card</div><span class="snip-tag">ai-summary</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"ai-summary\">\n  <div style=\"font-size:11px;font-weight:600;color:var(--color-primary-700);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;\">✦ AI Summary</div>\n  <div style=\"font-size:13px;color:var(--text-secondary);line-height:18px;\">Your AI-generated summary here.</div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'ai-summary')">📋 Copy HTML</button>
         </div>
       </div>
 
-      <div class="snip-card" data-tags="chat bubble message ai user">
+      <div class="snip-card" data-tags="chat bubble message ai user conversation">
         <div class="snip-preview" style="flex-direction:column;gap:8px;padding:12px;">
           <div style="display:flex;gap:8px;align-items:flex-end;">
             <div style="width:24px;height:24px;border-radius:50%;background:var(--color-primary-100);color:var(--color-primary-700);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;">A</div>
@@ -543,7 +722,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Chat Bubbles</div><span class="snip-tag">chat-bubble</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<!-- AI message -->\n<div style=\"display:flex;gap:8px;align-items:flex-end;margin-bottom:8px;\">\n  <div style=\"width:24px;height:24px;border-radius:50%;background:var(--color-primary-100);color:var(--color-primary-700);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;\">A</div>\n  <div style=\"background:var(--bg-secondary);padding:8px 12px;border-radius:8px 8px 8px 2px;font-size:13px;max-width:80%;\">AI message here</div>\n</div>\n<!-- User message -->\n<div style=\"display:flex;gap:8px;align-items:flex-end;flex-direction:row-reverse;\">\n  <div style=\"width:24px;height:24px;border-radius:50%;background:var(--color-neutral-200);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;\">AS</div>\n  <div style=\"background:var(--interactive);color:#fff;padding:8px 12px;border-radius:8px 8px 2px 8px;font-size:13px;max-width:80%;\">User message</div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'chat-bubbles')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -569,7 +748,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Notification Row</div><span class="snip-tag">notif-item</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div class=\"notif-item unread\">\n  <div class=\"notif-dot\"></div>\n  <div class=\"avatar\" style=\"width:28px;height:28px;font-size:11px;flex-shrink:0;\">JD</div>\n  <div style=\"flex:1;min-width:0;\">\n    <div style=\"font-size:13.5px;font-weight:500;margin-bottom:2px;\">Notification title</div>\n    <div style=\"font-size:12px;color:var(--text-secondary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;\">Supporting detail</div>\n  </div>\n  <div style=\"font-size:11px;color:var(--text-tertiary);white-space:nowrap;\">2m ago</div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'notif-row')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -589,7 +768,7 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
         </div>
         <div class="snip-footer">
           <div><div class="snip-name">Task / Approval Row</div><span class="snip-tag">task-item</span></div>
-          <button class="copy-btn" onclick="copySnip(this, `<div style=\"display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border-default);\">\n  <div style=\"width:36px;height:36px;border-radius:8px;background:var(--color-primary-50);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;\">💻</div>\n  <div style=\"flex:1;\">\n    <div style=\"font-size:13.5px;font-weight:500;margin-bottom:2px;\">Task title — Person Name</div>\n    <div style=\"font-size:12px;color:var(--text-secondary);\">Category · Status</div>\n  </div>\n  <div style=\"display:flex;gap:6px;flex-shrink:0;\">\n    <button class=\"btn btn-primary btn-xs\">Approve</button>\n    <button class=\"btn btn-secondary btn-xs\">Reject</button>\n  </div>\n</div>`)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="copySnip(this,'task-row')">📋 Copy HTML</button>
         </div>
       </div>
 
@@ -603,7 +782,6 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
 
       <div class="snip-card" data-tags="shell layout template scaffold page frame">
         <div class="snip-preview" style="flex-direction:column;align-items:stretch;padding:8px;gap:4px;height:140px;">
-          <!-- Mini shell preview -->
           <div style="height:20px;background:var(--bg-primary);border-radius:3px;border:1px solid var(--border-default);display:flex;align-items:center;padding:0 8px;gap:6px;">
             <div style="width:12px;height:12px;background:var(--interactive);border-radius:2px;"></div>
             <div style="flex:1;max-width:100px;height:8px;background:var(--border-default);border-radius:10px;"></div>
@@ -634,16 +812,13 @@ body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--te
 </main>
 
 <script>
-function copySnip(btn, code) {
+function copySnip(btn, key) {
+  const code = SNIPS[key] || '';
   navigator.clipboard.writeText(code).then(() => {
     btn.textContent = '✓ Copied!';
     btn.classList.add('copied');
-    setTimeout(() => {
-      btn.textContent = '📋 Copy HTML';
-      btn.classList.remove('copied');
-    }, 2000);
+    setTimeout(() => { btn.textContent = '📋 Copy HTML'; btn.classList.remove('copied'); }, 2000);
   }).catch(() => {
-    // fallback
     const ta = document.createElement('textarea');
     ta.value = code;
     document.body.appendChild(ta);
@@ -667,7 +842,6 @@ function filterSnippets(q) {
     const tags = (card.dataset.tags || '') + ' ' + card.querySelector('.snip-name').textContent.toLowerCase();
     card.style.display = tags.includes(term) ? '' : 'none';
   });
-  // Hide empty sections
   document.querySelectorAll('.snip-section').forEach(sec => {
     const visible = [...sec.querySelectorAll('.snip-card')].some(c => c.style.display !== 'none');
     sec.style.display = visible ? '' : 'none';
