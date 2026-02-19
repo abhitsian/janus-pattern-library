@@ -1,0 +1,177 @@
+/* ================================================================
+   JANUS DESIGN TOKENS  —  tokens.css
+   Source: Figma → Project Janus (Components + Variable Architecture)
+   Last synced: 2026-02-19
+
+   Usage: <link rel="stylesheet" href="../tokens.css">
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* ── BRAND ─────────────────────────────────────── */
+  --color-brand:              #0080a3;
+
+  /* ── PRIMARY SCALE (Teal) ──────────────────────── */
+  --color-primary-50:         #f4f9fb;
+  --color-primary-100:        #cee5f0;
+  --color-primary-200:        #a4d1e3;
+  --color-primary-300:        #7cbcd6;
+  --color-primary-400:        #53a6c5;
+  --color-primary-500:        #2d91b4;
+  --color-primary-600:        #007b9e;
+  --color-primary-700:        #006484;
+  --color-primary-800:        #004f6b;
+  --color-primary-900:        #003b52;
+  --color-primary-950:        #002839;
+
+  /* ── SUCCESS / ACCENT (Green) ──────────────────── */
+  --color-success-50:         #e9ffe5;
+  --color-success-100:        #8cf97a;
+  --color-success-500:        #349b21;
+  --color-success-600:        #298317;
+  --color-success-700:        #1f6b0f;
+
+  /* ── ERROR (Red) ───────────────────────────────── */
+  --color-error-50:           #fff7f6;
+  --color-error-100:          #ffd8d0;
+  --color-error-500:          #fb3e37;
+  --color-error-600:          #e2161c;
+  --color-error-700:          #be0003;
+
+  /* ── WARNING (Orange / Amber) ──────────────────── */
+  --color-warning-50:         #fff8f3;
+  --color-warning-400:        #fa751a;
+  --color-warning-500:        #df6000;
+  --color-amber-300:          #f7a013;
+  --color-amber-500:          #c17500;
+
+  /* ── INFO (Blue) ───────────────────────────────── */
+  --color-info-50:            #f4f9ff;
+  --color-info-500:           #3d84f8;
+
+  /* ── NEUTRALS (Slate) ──────────────────────────── */
+  --color-neutral-50:         #f8fafc;
+  --color-neutral-100:        #f1f5f9;
+  --color-neutral-200:        #e2e8f0;
+  --color-neutral-300:        #cbd5e1;
+  --color-neutral-400:        #94a3b8;
+  --color-neutral-500:        #64748b;
+  --color-neutral-600:        #475569;
+  --color-neutral-700:        #334155;
+  --color-neutral-800:        #1e293b;
+  --color-neutral-900:        #0f172a;
+  --color-neutral-950:        #020617;
+
+  /* ── EC BRAND GRAYS (ServiceNow) ───────────────── */
+  --color-ec-lightest:        #ffffff;
+  --color-ec-lighter:         #f5f6f7;
+  --color-ec-light:           #e2e5e7;
+  --color-ec-dark:            #4f5c62;
+  --color-ec-darker:          #37444a;
+  --color-ec-darkest:         #10171a;
+
+  /* ── SEMANTIC TOKENS (USE THESE IN COMPONENTS) ─── */
+  --bg-primary:               #ffffff;
+  --bg-secondary:             #f5f6f7;
+  --bg-tertiary:              #e2e5e7;
+  --bg-inverted:              #10171a;
+
+  --text-primary:             #10171a;
+  --text-secondary:           #4f5c62;
+  --text-tertiary:            #94a3b8;
+  --text-inverted:            #ffffff;
+  --text-link:                #007b9e;
+
+  --border-default:           #e2e5e7;
+  --border-strong:            #3d4a50;
+  --border-focus:             #020617;
+
+  --interactive:              #0080a3;
+  --interactive-hover:        #006484;
+  --interactive-light:        #f4f9fb;
+
+  /* ── SHADOWS ───────────────────────────────────── */
+  --shadow-2xs:  0 1px 0 0 rgba(0,0,0,.05);
+  --shadow-xs:   0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-sm:   0 1px 2px 0 rgba(0,0,0,.1), 0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-md:   0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+  --shadow-lg:   0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+  --shadow-xl:   0 20px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.1);
+  --shadow-2xl:  0 25px 50px -12px rgba(0,0,0,.25);
+  --shadow-focus: 0 0 0 3px var(--color-primary-100);
+
+  /* ── BORDER RADIUS ─────────────────────────────── */
+  --radius-none: 0px;
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-2xl:  16px;
+  --radius-3xl:  24px;
+  --radius-full: 9999px;
+
+  /* ── SPACING (4px grid) ────────────────────────── */
+  --space-px:  1px;
+  --space-0-5: 2px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-7:   28px;
+  --space-8:   32px;
+  --space-9:   36px;
+  --space-10:  40px;
+  --space-11:  44px;
+  --space-12:  48px;
+  --space-14:  56px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+
+  /* ── TYPOGRAPHY ────────────────────────────────── */
+  --font-sans:    'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-mono:    'Fira Code', 'Cascadia Code', monospace;
+
+  /* Font sizes */
+  --text-xs:   10px;
+  --text-sm:   12px;
+  --text-base: 14px;
+  --text-md:   16px;
+  --text-lg:   18px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  36px;
+  --text-5xl:  48px;
+
+  /* ── LAYOUT ────────────────────────────────────── */
+  --topbar-height:    52px;
+  --sidenav-width:    200px;
+  --chat-panel-width: 340px;
+  --content-max-width: 1100px;
+}
+
+/* ── BASE RESET ──────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: 20px;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: inherit; }

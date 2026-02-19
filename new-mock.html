@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--
+  ┌─────────────────────────────────────────────────────────┐
+  │  JANUS MOCK TEMPLATE                                    │
+  │  ─────────────────────────────────────────────────────  │
+  │  HOW TO USE:                                            │
+  │  1. Save a copy of this file with your feature name     │
+  │     e.g.  activity-hub-filters.html                     │
+  │  2. Edit STEP 1 → set the page title                    │
+  │  3. Edit STEP 2 → choose which nav item is active       │
+  │  4. Edit STEP 3 → replace the content area              │
+  │  5. Open snippets.html to copy-paste any component      │
+  │  6. Share the .html file link or screenshot it          │
+  └─────────────────────────────────────────────────────────┘
+-->
+
+<!-- STEP 1 ▶ Change the page title -->
+<title>My Feature Name — Janus</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* ── Design Tokens ── */
+:root {
+  --color-brand:#0080a3; --color-primary-50:#f4f9fb; --color-primary-100:#cee5f0;
+  --color-primary-200:#a4d1e3; --color-primary-600:#007b9e; --color-primary-700:#006484;
+  --color-success-500:#349b21; --color-error-500:#fb3e37; --color-warning-400:#fa751a;
+  --color-neutral-50:#f8fafc; --color-neutral-100:#f1f5f9; --color-neutral-200:#e2e8f0;
+  --color-neutral-300:#cbd5e1; --color-neutral-400:#94a3b8; --color-neutral-500:#64748b;
+  --color-neutral-600:#475569; --color-neutral-700:#334155; --color-neutral-800:#1e293b;
+  --color-ec-lighter:#f5f6f7; --color-ec-light:#e2e5e7;
+  --color-ec-dark:#4f5c62; --color-ec-darkest:#10171a;
+  --bg-primary:#fff; --bg-secondary:#f5f6f7; --bg-inverted:#10171a;
+  --text-primary:#10171a; --text-secondary:#4f5c62; --text-tertiary:#94a3b8; --text-inverted:#fff;
+  --border-default:#e2e5e7; --interactive:#0080a3; --interactive-hover:#006484;
+  --shadow-xs:0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-sm:0 1px 2px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06);
+  --radius-md:4px; --radius-lg:8px; --radius-xl:12px; --radius-full:9999px;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;
+  --space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;
+  --font-sans:'Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-primary);background:var(--bg-secondary);}
+a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ── Top Bar ── */
+.topbar{height:52px;background:var(--bg-primary);border-bottom:1px solid var(--border-default);
+  display:flex;align-items:center;padding:0 20px;gap:16px;position:fixed;top:0;left:0;right:0;
+  z-index:100;box-shadow:0 1px 0 0 rgba(0,0,0,.05)}
+.tb-brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;min-width:200px;flex-shrink:0}
+.tb-brand-icon{width:28px;height:28px;background:var(--color-brand);border-radius:var(--radius-md);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.tb-search{flex:1;max-width:480px}
+.omni{display:flex;align-items:center;gap:8px;background:var(--bg-secondary);border:1px solid var(--border-default);
+  border-radius:var(--radius-full);padding:6px 14px}
+.omni input{flex:1;border:none;background:none;font-family:inherit;font-size:13px;color:var(--text-primary);outline:none}
+.omni input::placeholder{color:var(--text-tertiary)}
+.tb-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;
+  justify-content:center;color:var(--text-secondary);transition:background .15s;font-size:16px;cursor:pointer}
+.icon-btn:hover{background:var(--bg-secondary)}
+.avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-primary-100);
+  color:var(--color-primary-700);font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center}
+
+/* ── Side Nav ── */
+.sidenav{position:fixed;top:52px;left:0;bottom:0;width:200px;background:var(--bg-primary);
+  border-right:1px solid var(--border-default);padding:12px 8px;display:flex;flex-direction:column;
+  gap:2px;overflow-y:auto;z-index:90}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-md);
+  font-size:13.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:background .15s,color .15s}
+.nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.nav-item.active{background:var(--color-primary-50);color:var(--interactive)}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--color-error-500);color:#fff;font-size:10px;
+  font-weight:700;border-radius:var(--radius-full);padding:1px 5px;line-height:14px}
+.nav-divider{height:1px;background:var(--border-default);margin:8px 0}
+.nav-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--text-tertiary);padding:4px 10px 2px}
+.nav-spacer{flex:1}
+
+/* ── Main ── */
+.main{margin-left:200px;margin-top:52px;min-height:calc(100vh - 52px);padding:32px 40px 80px;max-width:1100px}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);margin-bottom:16px}
+.breadcrumb a{color:var(--interactive)}
+.page-title{font-size:24px;font-weight:600;line-height:32px;margin-bottom:4px}
+.page-subtitle{font-size:14px;color:var(--text-secondary);line-height:20px;margin-bottom:28px}
+
+/* ── Common Components ── */
+.card{background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-xl);
+  padding:20px;box-shadow:var(--shadow-xs)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;
+  font-weight:500;border-radius:var(--radius-lg);border:1px solid transparent;cursor:pointer;
+  transition:background .15s,border-color .15s;white-space:nowrap}
+.btn-primary{font-size:14px;padding:8px 20px;background:var(--interactive);border-color:var(--interactive);color:#fff}
+.btn-primary:hover{background:var(--interactive-hover);border-color:var(--interactive-hover)}
+.btn-secondary{font-size:14px;padding:8px 20px;background:var(--bg-primary);border-color:var(--border-default);color:var(--text-primary)}
+.btn-secondary:hover{background:var(--bg-secondary)}
+.btn-ghost{font-size:13px;padding:6px 12px;color:var(--text-secondary)}
+.btn-ghost:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.btn-sm{font-size:12px;padding:5px 14px;border-radius:var(--radius-md)}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;
+  padding:2px 7px;border-radius:var(--radius-full);border:1px solid transparent}
+.badge-primary{background:var(--color-primary-50);color:var(--color-primary-700);border-color:var(--color-primary-100)}
+.badge-success{background:#e9ffe5;color:#1f6b0f;border-color:#8cf97a}
+.badge-warning{background:#fff7eb;color:var(--color-amber-500,#c17500);border-color:#ffdc9d}
+.badge-error{background:var(--color-error-50,#fff7f6);color:var(--color-error-700,#be0003);border-color:var(--color-error-100,#ffd8d0)}
+.badge-neutral{background:var(--color-neutral-100);color:var(--color-neutral-700);border-color:var(--color-neutral-200)}
+.badge-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg-secondary);
+  border:1px solid var(--border-default);border-radius:var(--radius-full);padding:2px 12px;
+  font-size:13px;font-weight:500;cursor:pointer;transition:background .15s}
+.chip:hover,.chip.active{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive)}
+.input{width:100%;font-family:inherit;font-size:14px;color:var(--text-primary);background:var(--bg-primary);
+  border:1px solid var(--border-default);border-radius:var(--radius-lg);padding:8px 12px;outline:none;transition:border-color .15s}
+.input:focus{border-color:var(--interactive);box-shadow:0 0 0 3px var(--color-primary-100)}
+.divider{height:1px;background:var(--border-default);margin:16px 0}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="tb-brand">
+    <div class="tb-brand-icon">J</div>
+    Janus
+  </div>
+  <div class="tb-search">
+    <div class="omni">
+      <span style="color:var(--text-tertiary);font-size:14px;">🔍</span>
+      <input placeholder="Ask me anything or search…">
+      <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:3px;padding:1px 5px;font-family:monospace;">⌘K</span>
+    </div>
+  </div>
+  <div class="tb-actions">
+    <div class="icon-btn">🔔</div>
+    <div class="icon-btn">⊞</div>
+    <div class="icon-btn">❓</div>
+    <div class="avatar">AS</div>
+  </div>
+</header>
+
+<!-- SIDE NAV -->
+<!-- STEP 2 ▶ Add class="active" to the correct nav item -->
+<nav class="sidenav">
+  <div class="nav-item"><span class="nav-icon">🏠</span> Home</div>
+  <div class="nav-item"><span class="nav-icon">📋</span> Activity Hub <span class="nav-badge">3</span></div>
+  <div class="nav-item"><span class="nav-icon">🔔</span> Notifications</div>
+  <div class="nav-item"><span class="nav-icon">📚</span> Knowledge</div>
+  <div class="nav-item"><span class="nav-icon">👥</span> People</div>
+  <div class="nav-divider"></div>
+  <div class="nav-label">Catalog</div>
+  <div class="nav-item"><span class="nav-icon">💻</span> IT Services</div>
+  <div class="nav-item"><span class="nav-icon">🏢</span> HR Services</div>
+  <div class="nav-item"><span class="nav-icon">⚖️</span> Legal</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-item active"><span class="nav-icon">⚙️</span> Settings</div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+  <!-- Breadcrumb (optional) -->
+  <div class="breadcrumb">
+    <a href="#">Home</a> ›
+    <!-- STEP 3 ▶ Update breadcrumb -->
+    <span>My Feature</span>
+  </div>
+
+  <!-- Page header -->
+  <!-- STEP 3 ▶ Update page title and subtitle -->
+  <h1 class="page-title">Page Title</h1>
+  <p class="page-subtitle">One sentence describing what this page does.</p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       YOUR CONTENT GOES HERE
+       Copy components from snippets.html and paste below.
+       ═══════════════════════════════════════════════════ -->
+
+  <div class="card">
+    <p style="color:var(--text-tertiary);font-size:13px;text-align:center;padding:40px 0;">
+      ✏️ Replace this with your content.<br>
+      Open <strong>snippets.html</strong> to copy-paste components.
+    </p>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       END CONTENT
+       ═══════════════════════════════════════════════════ -->
+
+</main>
+
+</body>
+</html>

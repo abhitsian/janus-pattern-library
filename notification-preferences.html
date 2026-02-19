@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification Preferences — Janus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   JANUS DESIGN TOKENS
+   ============================================================ */
+:root {
+  --color-brand:            #0080a3;
+  --color-primary-50:       #f4f9fb;
+  --color-primary-100:      #cee5f0;
+  --color-primary-200:      #a4d1e3;
+  --color-primary-600:      #007b9e;
+  --color-primary-700:      #006484;
+
+  --color-accent-500:       #349b21;
+  --color-red-500:          #fb3e37;
+  --color-red-600:          #e2161c;
+  --color-orange-400:       #fa751a;
+  --color-amber-300:        #f7a013;
+
+  --color-neutral-50:       #f8fafc;
+  --color-neutral-100:      #f1f5f9;
+  --color-neutral-200:      #e2e8f0;
+  --color-neutral-300:      #cbd5e1;
+  --color-neutral-400:      #94a3b8;
+  --color-neutral-500:      #64748b;
+  --color-neutral-600:      #475569;
+  --color-neutral-700:      #334155;
+  --color-neutral-800:      #1e293b;
+
+  --color-ec-lightest:      #ffffff;
+  --color-ec-lighter:       #f5f6f7;
+  --color-ec-light:         #e2e5e7;
+  --color-ec-dark:          #4f5c62;
+  --color-ec-darker:        #37444a;
+  --color-ec-darkest:       #10171a;
+
+  --color-bg-primary:       #ffffff;
+  --color-bg-secondary:     #f5f6f7;
+  --color-bg-tertiary:      #e2e5e7;
+  --color-bg-inverted:      #10171a;
+
+  --color-text-primary:     #10171a;
+  --color-text-secondary:   #4f5c62;
+  --color-text-tertiary:    #94a3b8;
+  --color-text-inverted:    #ffffff;
+  --color-text-link:        #007b9e;
+
+  --color-border-default:   #e2e5e7;
+  --color-border-strong:    #3d4a50;
+  --color-interactive:      #0080a3;
+  --color-interactive-hover:#006484;
+
+  --shadow-2xs: 0 1px 0 0 rgba(0,0,0,.05);
+  --shadow-xs:  0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-sm:  0 1px 2px 0 rgba(0,0,0,.1), 0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+
+  --radius-sm:   2px;
+  --radius-md:   4px;
+  --radius-lg:   8px;
+  --radius-xl:   12px;
+  --radius-2xl:  16px;
+  --radius-full: 9999px;
+
+  --font-heading: 'Inter', system-ui, sans-serif;
+  --font-body:    'Inter', system-ui, sans-serif;
+}
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  min-height: 100vh;
+}
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+/* ============================================================
+   SHELL — TOP BAR
+   ============================================================ */
+.topbar {
+  height: 52px;
+  background: var(--color-bg-primary);
+  border-bottom: 1px solid var(--color-border-default);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 16px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-2xs);
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  min-width: 200px;
+  flex-shrink: 0;
+}
+.topbar-brand-icon {
+  width: 28px; height: 28px;
+  background: var(--color-brand);
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+.topbar-search {
+  flex: 1;
+  max-width: 480px;
+}
+.omni-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  transition: border-color .15s, box-shadow .15s;
+}
+.omni-bar:focus-within {
+  border-color: var(--color-interactive);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+  background: var(--color-bg-primary);
+}
+.omni-icon { color: var(--color-text-tertiary); font-size: 14px; flex-shrink: 0; }
+.omni-input {
+  flex: 1;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text-primary);
+  outline: none;
+}
+.omni-input::placeholder { color: var(--color-text-tertiary); }
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+.icon-btn {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--color-text-secondary);
+  transition: background .15s, color .15s;
+  font-size: 16px;
+  cursor: pointer;
+}
+.icon-btn:hover { background: var(--color-bg-secondary); color: var(--color-text-primary); }
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  font-weight: 600;
+  font-size: 12px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+/* ============================================================
+   SHELL — SIDE NAV
+   ============================================================ */
+.sidenav {
+  position: fixed;
+  top: 52px; left: 0; bottom: 0;
+  width: 200px;
+  background: var(--color-bg-primary);
+  border-right: 1px solid var(--color-border-default);
+  padding: 12px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  z-index: 90;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--radius-md);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  user-select: none;
+}
+.nav-item:hover { background: var(--color-bg-secondary); color: var(--color-text-primary); }
+.nav-item.active { background: var(--color-primary-50); color: var(--color-interactive); }
+.nav-item .nav-icon { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.nav-badge {
+  margin-left: auto;
+  background: var(--color-red-500);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: var(--radius-full);
+  padding: 1px 5px;
+  line-height: 14px;
+}
+.nav-divider { height: 1px; background: var(--color-border-default); margin: 8px 0; }
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  padding: 4px 10px 2px;
+}
+.nav-spacer { flex: 1; }
+
+/* ============================================================
+   MAIN CONTENT AREA
+   ============================================================ */
+.main {
+  margin-left: 200px;
+  margin-top: 52px;
+  min-height: calc(100vh - 52px);
+  padding: 32px 40px 60px;
+  max-width: 900px;
+}
+
+/* ============================================================
+   PAGE HEADER
+   ============================================================ */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin-bottom: 16px;
+}
+.breadcrumb a { color: var(--color-text-link); }
+.breadcrumb a:hover { text-decoration: underline; }
+.breadcrumb-sep { color: var(--color-border-default); }
+
+.page-header {
+  margin-bottom: 28px;
+}
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 32px;
+  color: var(--color-text-primary);
+  margin-bottom: 4px;
+}
+.page-subtitle {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  line-height: 20px;
+}
+
+/* ============================================================
+   SECTION CARD
+   ============================================================ */
+.pref-section {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  margin-bottom: 20px;
+  box-shadow: var(--shadow-xs);
+}
+.pref-section-header {
+  padding: 18px 24px 16px;
+  border-bottom: 1px solid var(--color-border-default);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.pref-section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 2px;
+}
+.pref-section-desc {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 18px;
+  max-width: 520px;
+}
+
+/* ============================================================
+   TOGGLE SWITCH
+   ============================================================ */
+.toggle-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+.toggle input { display: none; }
+.toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--color-ec-light);
+  border-radius: var(--radius-full);
+  transition: background .2s;
+  border: 1px solid var(--color-border-default);
+}
+.toggle input:checked ~ .toggle-track {
+  background: var(--color-interactive);
+  border-color: var(--color-interactive);
+}
+.toggle-thumb {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  background: #fff;
+  border-radius: var(--radius-full);
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  transition: left .2s;
+}
+.toggle input:checked ~ .toggle-thumb { left: 18px; }
+.toggle-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* ============================================================
+   CHANNEL PILLS
+   ============================================================ */
+.channel-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  padding: 20px 24px;
+}
+.channel-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 16px 12px 14px;
+  cursor: pointer;
+  transition: border-color .15s, background .15s, box-shadow .15s;
+  user-select: none;
+}
+.channel-card:hover { background: var(--color-primary-50); border-color: var(--color-primary-200); }
+.channel-card.on {
+  border-color: var(--color-interactive);
+  background: var(--color-primary-50);
+}
+.channel-icon {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border-default);
+}
+.channel-card.on .channel-icon {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-200);
+}
+.channel-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  text-align: center;
+}
+.channel-status {
+  font-size: 11px;
+  color: var(--color-text-tertiary);
+  font-weight: 500;
+}
+.channel-card.on .channel-status { color: var(--color-interactive); }
+
+/* ============================================================
+   NOTIFICATION CATEGORIES TABLE
+   ============================================================ */
+.notif-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.notif-table thead tr {
+  background: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-default);
+}
+.notif-table th {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  padding: 10px 20px;
+  text-align: left;
+  white-space: nowrap;
+}
+.notif-table th.center { text-align: center; }
+.notif-table td {
+  padding: 0;
+  border-bottom: 1px solid var(--color-border-default);
+  vertical-align: middle;
+}
+.notif-table tbody tr:last-child td { border-bottom: none; }
+.notif-table tbody tr:hover { background: var(--color-bg-secondary); }
+.notif-row-main {
+  padding: 14px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.notif-row-label {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+.notif-row-desc {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+.notif-table .center-cell {
+  text-align: center;
+  padding: 14px 20px;
+}
+.notif-table .toggle { margin: 0 auto; }
+
+/* Category group header */
+.cat-group-row td {
+  background: var(--color-bg-secondary);
+  padding: 8px 20px 6px;
+  border-bottom: 1px solid var(--color-border-default);
+}
+.cat-group-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* ============================================================
+   APPEARANCE SECTION
+   ============================================================ */
+.appearance-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 20px 24px;
+}
+.appearance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid var(--color-border-default);
+  border-radius: var(--radius-lg);
+  padding: 14px;
+  cursor: pointer;
+  transition: border-color .15s;
+}
+.appearance-card:hover { border-color: var(--color-primary-200); }
+.appearance-card.selected { border-color: var(--color-interactive); }
+.appearance-preview {
+  height: 64px;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border-default);
+  display: flex;
+  flex-direction: column;
+}
+.ap-topbar { height: 12px; flex-shrink: 0; }
+.ap-body { flex: 1; display: flex; }
+.ap-sidebar { width: 20%; flex-shrink: 0; }
+.ap-content { flex: 1; padding: 4px; display: flex; flex-direction: column; gap: 2px; }
+.ap-block { height: 4px; border-radius: 1px; background: currentColor; opacity: 0.15; }
+.ap-block.wide { width: 80%; }
+.ap-block.mid  { width: 55%; }
+.ap-block.short{ width: 40%; }
+
+/* Light theme preview */
+.ap-light .ap-topbar  { background: #007b9e; }
+.ap-light .ap-sidebar { background: #f5f6f7; border-right: 1px solid #e2e5e7; }
+.ap-light .ap-content { background: #ffffff; }
+.ap-light .ap-block   { background: #10171a; }
+
+/* Dark theme preview */
+.ap-dark .ap-topbar   { background: #004f6b; }
+.ap-dark .ap-sidebar  { background: #1e293b; border-right: 1px solid #334155; }
+.ap-dark .ap-content  { background: #0f172a; }
+.ap-dark .ap-block    { background: #94a3b8; }
+
+/* System theme preview */
+.ap-system .ap-topbar  { background: linear-gradient(90deg, #007b9e 50%, #004f6b 50%); }
+.ap-system .ap-sidebar { background: linear-gradient(180deg, #f5f6f7 50%, #1e293b 50%); border-right: 1px solid #e2e5e7; }
+.ap-system .ap-content { background: linear-gradient(180deg, #ffffff 50%, #0f172a 50%); }
+.ap-system .ap-block   { background: #64748b; }
+
+.appearance-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.appearance-desc {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+}
+.radio-dot {
+  width: 16px; height: 16px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border-strong);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.radio-dot.checked {
+  border-color: var(--color-interactive);
+  background: var(--color-interactive);
+}
+.radio-dot.checked::after {
+  content: '';
+  width: 6px; height: 6px;
+  background: #fff;
+  border-radius: var(--radius-full);
+}
+.appearance-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   DIGEST SECTION
+   ============================================================ */
+.digest-options { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.digest-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.digest-info { flex: 1; }
+.digest-label { font-size: 13.5px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+.digest-desc  { font-size: 12px; color: var(--color-text-secondary); }
+.select-input {
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: 5px 8px;
+  cursor: pointer;
+  outline: none;
+  transition: border-color .15s;
+}
+.select-input:focus { border-color: var(--color-interactive); box-shadow: 0 0 0 3px var(--color-primary-100); }
+
+/* ============================================================
+   SAVE FOOTER (sticky)
+   ============================================================ */
+.save-bar {
+  position: fixed;
+  bottom: 0; left: 200px; right: 0;
+  background: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-default);
+  padding: 12px 40px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 90;
+  box-shadow: 0 -4px 12px rgba(0,0,0,.06);
+}
+.save-status {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.save-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--color-accent-500); }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: inherit;
+  font-weight: 500;
+  border-radius: var(--radius-lg);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  white-space: nowrap;
+}
+.btn-primary {
+  font-size: 14px;
+  padding: 8px 20px;
+  background: var(--color-interactive);
+  border-color: var(--color-interactive);
+  color: #fff;
+}
+.btn-primary:hover { background: var(--color-interactive-hover); border-color: var(--color-interactive-hover); }
+.btn-secondary {
+  font-size: 14px;
+  padding: 8px 20px;
+  background: var(--color-bg-primary);
+  border-color: var(--color-border-default);
+  color: var(--color-text-primary);
+}
+.btn-secondary:hover { background: var(--color-bg-secondary); border-color: var(--color-neutral-400); }
+.btn-ghost {
+  font-size: 13px;
+  padding: 6px 12px;
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+.btn-ghost:hover { background: var(--color-bg-secondary); color: var(--color-text-primary); }
+
+/* Badge */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: 11px; font-weight: 600; line-height: 1;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+}
+.badge-info { background: var(--color-primary-50); color: var(--color-primary-700); border-color: var(--color-primary-100); }
+.badge-success { background: #e9ffe5; color: #1f6b0f; border-color: #8cf97a; }
+
+/* Info callout */
+.callout {
+  display: flex;
+  gap: 10px;
+  background: var(--color-primary-50);
+  border: 1px solid var(--color-primary-100);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  line-height: 18px;
+}
+.callout-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+/* Tooltip on disabled toggles */
+.disabled-cell { opacity: 0.35; pointer-events: none; }
+.platform-only {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-align: center;
+  line-height: 1.2;
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TOP BAR
+═══════════════════════════════════════════════════════════ -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">J</div>
+    Janus
+  </div>
+  <div class="topbar-search">
+    <div class="omni-bar">
+      <span class="omni-icon">🔍</span>
+      <input class="omni-input" placeholder="Ask me anything or search…">
+      <span style="font-size:11px;color:var(--color-text-tertiary);background:var(--color-bg-secondary);border:1px solid var(--color-border-default);border-radius:3px;padding:1px 5px;font-family:monospace;">⌘K</span>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <div class="icon-btn">🔔</div>
+    <div class="icon-btn">⊞</div>
+    <div class="icon-btn">❓</div>
+    <div class="avatar">AS</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════
+     SIDE NAV
+═══════════════════════════════════════════════════════════ -->
+<nav class="sidenav">
+  <div class="nav-item"><span class="nav-icon">🏠</span> Home</div>
+  <div class="nav-item"><span class="nav-icon">📋</span> Activity Hub <span class="nav-badge">3</span></div>
+  <div class="nav-item"><span class="nav-icon">🔔</span> Notifications</div>
+  <div class="nav-item"><span class="nav-icon">📚</span> Knowledge</div>
+  <div class="nav-item"><span class="nav-icon">👥</span> People</div>
+  <div class="nav-divider"></div>
+  <div class="nav-section-label">Catalog</div>
+  <div class="nav-item"><span class="nav-icon">💻</span> IT Services</div>
+  <div class="nav-item"><span class="nav-icon">🏢</span> HR Services</div>
+  <div class="nav-item"><span class="nav-icon">⚖️</span> Legal</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-item active"><span class="nav-icon">⚙️</span> Settings</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN CONTENT
+═══════════════════════════════════════════════════════════ -->
+<main class="main">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">Settings</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>Notification Preferences</span>
+  </div>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title">Notification Preferences</div>
+    <div class="page-subtitle">Control how and where Janus notifies you. Changes apply to your account only.</div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────────────────
+       SECTION 1 — CHANNELS
+  ───────────────────────────────────────────────────────── -->
+  <div class="pref-section">
+    <div class="pref-section-header">
+      <div>
+        <div class="pref-section-title">Notification Channels</div>
+        <div class="pref-section-desc">Choose which channels you want to receive notifications on. Turning off a channel silences <em>all</em> notifications for that channel.</div>
+      </div>
+    </div>
+
+    <div class="channel-grid">
+      <!-- Portal -->
+      <div class="channel-card on" onclick="this.classList.toggle('on')">
+        <div class="channel-icon">🌐</div>
+        <div>
+          <div class="channel-name">Portal</div>
+          <div class="channel-status">Enabled</div>
+        </div>
+        <label class="toggle-wrap" onclick="event.stopPropagation()">
+          <div class="toggle">
+            <input type="checkbox" checked onchange="
+              var card=this.closest('.channel-card');
+              card.classList.toggle('on',this.checked);
+              card.querySelector('.channel-status').textContent=this.checked?'Enabled':'Disabled';
+            ">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Microsoft Teams -->
+      <div class="channel-card on" onclick="this.classList.toggle('on')">
+        <div class="channel-icon">🟦</div>
+        <div>
+          <div class="channel-name">Microsoft Teams</div>
+          <div class="channel-status">Enabled</div>
+        </div>
+        <label class="toggle-wrap" onclick="event.stopPropagation()">
+          <div class="toggle">
+            <input type="checkbox" checked onchange="
+              var card=this.closest('.channel-card');
+              card.classList.toggle('on',this.checked);
+              card.querySelector('.channel-status').textContent=this.checked?'Enabled':'Disabled';
+            ">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Outlook / Email -->
+      <div class="channel-card on" onclick="this.classList.toggle('on')">
+        <div class="channel-icon">📧</div>
+        <div>
+          <div class="channel-name">Email (Outlook)</div>
+          <div class="channel-status">Enabled</div>
+        </div>
+        <label class="toggle-wrap" onclick="event.stopPropagation()">
+          <div class="toggle">
+            <input type="checkbox" checked onchange="
+              var card=this.closest('.channel-card');
+              card.classList.toggle('on',this.checked);
+              card.querySelector('.channel-status').textContent=this.checked?'Enabled':'Disabled';
+            ">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- Mobile Push -->
+      <div class="channel-card" onclick="this.classList.toggle('on')">
+        <div class="channel-icon">📱</div>
+        <div>
+          <div class="channel-name">Mobile Push</div>
+          <div class="channel-status">Disabled</div>
+        </div>
+        <label class="toggle-wrap" onclick="event.stopPropagation()">
+          <div class="toggle">
+            <input type="checkbox" onchange="
+              var card=this.closest('.channel-card');
+              card.classList.toggle('on',this.checked);
+              card.querySelector('.channel-status').textContent=this.checked?'Enabled':'Disabled';
+            ">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+
+      <!-- SMS -->
+      <div class="channel-card" onclick="this.classList.toggle('on')">
+        <div class="channel-icon">💬</div>
+        <div>
+          <div class="channel-name">SMS</div>
+          <div class="channel-status">Disabled</div>
+        </div>
+        <label class="toggle-wrap" onclick="event.stopPropagation()">
+          <div class="toggle">
+            <input type="checkbox" onchange="
+              var card=this.closest('.channel-card');
+              card.classList.toggle('on',this.checked);
+              card.querySelector('.channel-status').textContent=this.checked?'Enabled':'Disabled';
+            ">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────────────────
+       SECTION 2 — CATEGORY CONTROLS
+  ───────────────────────────────────────────────────────── -->
+  <div class="pref-section">
+    <div class="pref-section-header">
+      <div>
+        <div class="pref-section-title">Notification Categories</div>
+        <div class="pref-section-desc">Control notifications by category across your enabled channels. Individual notification types within each category cannot be toggled separately.</div>
+      </div>
+      <span class="badge badge-info">14 core types</span>
+    </div>
+
+    <div style="padding:14px 24px 12px;">
+      <div class="callout">
+        <span class="callout-icon">ℹ️</span>
+        <span>Notification type–level controls are not yet supported. Toggle categories on/off per channel to manage your notifications.</span>
+      </div>
+    </div>
+
+    <table class="notif-table">
+      <thead>
+        <tr>
+          <th style="width:44%;">Category</th>
+          <th class="center">Portal</th>
+          <th class="center">Teams</th>
+          <th class="center">Email</th>
+          <th class="center">Mobile</th>
+          <th class="center">SMS</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- ── IT group ── -->
+        <tr class="cat-group-row"><td colspan="6"><span class="cat-group-label">IT &amp; Operations</span></td></tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Incident updates</span>
+            <span class="notif-row-desc">Status changes on your IT incidents and service requests</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked onchange=""><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Approval requests</span>
+            <span class="notif-row-desc">When you are assigned as an approver on a request</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Request fulfilled</span>
+            <span class="notif-row-desc">Confirmation when a catalog request is completed</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Comments &amp; replies</span>
+            <span class="notif-row-desc">When someone comments on your tickets or tasks</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Task assignments</span>
+            <span class="notif-row-desc">When a task is assigned to you directly</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <!-- ── HR group ── -->
+        <tr class="cat-group-row"><td colspan="6"><span class="cat-group-label">HR &amp; People</span></td></tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">HR case updates</span>
+            <span class="notif-row-desc">Status changes on HR service requests and cases</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Journey milestones</span>
+            <span class="notif-row-desc">Onboarding, offboarding, and lifecycle event notifications</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">PTO &amp; time off</span>
+            <span class="notif-row-desc">Approval decisions on your time-off requests</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+        <!-- ── Workplace group ── -->
+        <tr class="cat-group-row"><td colspan="6"><span class="cat-group-label">Workplace Services</span></td></tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Facility &amp; workplace requests</span>
+            <span class="notif-row-desc">Desk bookings, room reservations, facilities tickets</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+        <!-- ── Platform group ── -->
+        <tr class="cat-group-row"><td colspan="6"><span class="cat-group-label">Platform &amp; System</span></td></tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Knowledge base</span>
+            <span class="notif-row-desc">Articles you subscribed to are updated or published</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell disabled-cell"><div class="platform-only">N/A</div></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Surveys &amp; feedback</span>
+            <span class="notif-row-desc">Survey invitations and post-interaction feedback requests</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+        <tr>
+          <td><div class="notif-row-main">
+            <span class="notif-row-label">Announcements</span>
+            <span class="notif-row-desc">Company-wide and department announcements from admins</span>
+          </div></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+          <td class="center-cell"><label class="toggle-wrap" style="justify-content:center;"><div class="toggle"><input type="checkbox"><div class="toggle-track"></div><div class="toggle-thumb"></div></div></label></td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────────────────
+       SECTION 3 — DIGEST
+  ───────────────────────────────────────────────────────── -->
+  <div class="pref-section">
+    <div class="pref-section-header">
+      <div>
+        <div class="pref-section-title">Email Digest</div>
+        <div class="pref-section-desc">Consolidate email notifications into a single digest to reduce inbox noise.</div>
+      </div>
+      <label class="toggle-wrap">
+        <div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+        <span class="toggle-label">Enabled</span>
+      </label>
+    </div>
+    <div class="digest-options">
+      <div class="digest-row">
+        <div class="digest-info">
+          <div class="digest-label">Digest frequency</div>
+          <div class="digest-desc">How often to bundle your email notifications into a single digest</div>
+        </div>
+        <select class="select-input">
+          <option>Immediately</option>
+          <option selected>Daily (9:00 AM)</option>
+          <option>Weekly (Monday 9:00 AM)</option>
+          <option>Never</option>
+        </select>
+      </div>
+      <div class="digest-row">
+        <div class="digest-info">
+          <div class="digest-label">Priority-only immediate delivery</div>
+          <div class="digest-desc">Send approval requests and urgent notifications immediately, regardless of digest schedule</div>
+        </div>
+        <label class="toggle-wrap">
+          <div class="toggle"><input type="checkbox" checked><div class="toggle-track"></div><div class="toggle-thumb"></div></div>
+        </label>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ─────────────────────────────────────────────────────────
+       SECTION 4 — APPEARANCE (Dark/Light Mode)
+  ───────────────────────────────────────────────────────── -->
+  <div class="pref-section">
+    <div class="pref-section-header">
+      <div>
+        <div class="pref-section-title">Appearance</div>
+        <div class="pref-section-desc">Choose the theme for your Janus experience. Affects the portal only; Teams and email clients use their own theme settings.</div>
+      </div>
+    </div>
+    <div class="appearance-options">
+
+      <!-- Light -->
+      <div class="appearance-card selected" id="ap-light" onclick="selectAppearance('light')">
+        <div class="appearance-preview ap-light">
+          <div class="ap-topbar"></div>
+          <div class="ap-body">
+            <div class="ap-sidebar"></div>
+            <div class="ap-content">
+              <div class="ap-block wide"></div>
+              <div class="ap-block mid"></div>
+              <div class="ap-block short"></div>
+            </div>
+          </div>
+        </div>
+        <div class="appearance-row">
+          <div class="radio-dot checked" id="radio-light"></div>
+          <div>
+            <div class="appearance-label">Light</div>
+            <div class="appearance-desc">Clean, high-contrast view</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dark -->
+      <div class="appearance-card" id="ap-dark" onclick="selectAppearance('dark')">
+        <div class="appearance-preview ap-dark">
+          <div class="ap-topbar"></div>
+          <div class="ap-body">
+            <div class="ap-sidebar"></div>
+            <div class="ap-content">
+              <div class="ap-block wide"></div>
+              <div class="ap-block mid"></div>
+              <div class="ap-block short"></div>
+            </div>
+          </div>
+        </div>
+        <div class="appearance-row">
+          <div class="radio-dot" id="radio-dark"></div>
+          <div>
+            <div class="appearance-label">Dark</div>
+            <div class="appearance-desc">Easier on the eyes at night</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- System -->
+      <div class="appearance-card" id="ap-system" onclick="selectAppearance('system')">
+        <div class="appearance-preview ap-system">
+          <div class="ap-topbar"></div>
+          <div class="ap-body">
+            <div class="ap-sidebar"></div>
+            <div class="ap-content">
+              <div class="ap-block wide"></div>
+              <div class="ap-block mid"></div>
+              <div class="ap-block short"></div>
+            </div>
+          </div>
+        </div>
+        <div class="appearance-row">
+          <div class="radio-dot" id="radio-system"></div>
+          <div>
+            <div class="appearance-label">System default</div>
+            <div class="appearance-desc">Follows your OS setting</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- bottom padding for sticky bar -->
+  <div style="height:60px;"></div>
+</main>
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     STICKY SAVE BAR
+═══════════════════════════════════════════════════════════ -->
+<div class="save-bar" id="saveBar">
+  <div class="save-status">
+    <div class="save-dot"></div>
+    Unsaved changes
+  </div>
+  <div style="margin-left:auto; display:flex; gap:8px;">
+    <button class="btn btn-secondary" onclick="discardChanges()">Discard</button>
+    <button class="btn btn-primary" onclick="saveChanges()">Save preferences</button>
+  </div>
+</div>
+
+
+<script>
+/* ── Appearance selector ── */
+function selectAppearance(theme) {
+  ['light','dark','system'].forEach(t => {
+    document.getElementById('ap-'+t).classList.remove('selected');
+    document.getElementById('radio-'+t).classList.remove('checked');
+  });
+  document.getElementById('ap-'+theme).classList.add('selected');
+  document.getElementById('radio-'+theme).classList.add('checked');
+  showSaveBar();
+}
+
+/* ── All toggles trigger unsaved state ── */
+document.querySelectorAll('input[type="checkbox"], select').forEach(el => {
+  el.addEventListener('change', showSaveBar);
+});
+
+function showSaveBar() {
+  var bar = document.getElementById('saveBar');
+  bar.querySelector('.save-status').innerHTML = '<div class="save-dot"></div> Unsaved changes';
+}
+
+function saveChanges() {
+  var bar = document.getElementById('saveBar');
+  bar.querySelector('.save-status').innerHTML = '<span style="color:var(--color-accent-500)">✓</span> Preferences saved';
+  setTimeout(() => {
+    bar.querySelector('.save-status').innerHTML = '<div class="save-dot" style="background:var(--color-neutral-400)"></div> All changes saved';
+  }, 1500);
+}
+
+function discardChanges() {
+  location.reload();
+}
+</script>
+</body>
+</html>
