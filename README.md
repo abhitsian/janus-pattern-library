@@ -2,14 +2,44 @@
 
 Generate Janus mocks from a PRD in seconds using Claude Code.
 
+## Download
+
+**[⬇ Download ZIP](https://github.com/abhitsian/janus-pattern-library/archive/refs/heads/main.zip)**
+
+No git required. Just download and unzip.
+
+---
+
+## Setup (one time, 3 steps)
+
+**Step 1 — Download and unzip**
+Click the link above, or go to the GitHub page → green "Code" button → "Download ZIP". Unzip it anywhere on your computer.
+
+**Step 2 — Install Claude Code** (if you haven't already)
+```
+npm install -g @anthropic/claude-code
+```
+Then run `claude` once to log in with your Anthropic account.
+
+**Step 3 — Open the folder in Claude Code**
+```
+cd janus-pattern-library-main
+claude
+```
+
+---
+
 ## How to use
 
-1. Download this folder
-2. Open it in Claude Code (`claude` in the terminal from the folder)
-3. Paste your PRD or describe what you want to mock
-4. Claude generates a `.html` file — open it in your browser
+Once inside Claude Code, just describe what you need:
 
-That's it. No installs, no Figma access, no design knowledge needed.
+> "Create a mock for the Approval Detail page. The user should see the request summary, a timeline of events, and approve/reject buttons."
+
+> "Mock the Activity Hub with a filter bar, a list of work items with status badges, and a detail panel that slides in from the right."
+
+Claude generates a `.html` file — open it in your browser. Done.
+
+No Figma access, no design knowledge, no build tools needed.
 
 ## Example prompts
 
