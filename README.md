@@ -107,15 +107,17 @@ All tokens live in `tokens.css` as CSS custom properties.
 
 ## Live URL (GitHub Pages)
 
-Once the repo has GitHub Pages enabled, all mocks are accessible at:
+All mocks are live now at:
 
 ```
-https://abhisheksivaraman.github.io/janus-pattern-library/
+https://abhitsian.github.io/janus-pattern-library/
 ```
 
 Share individual mock links:
 ```
-https://abhisheksivaraman.github.io/janus-pattern-library/notification-preferences.html
+https://abhitsian.github.io/janus-pattern-library/notification-preferences.html
+https://abhitsian.github.io/janus-pattern-library/snippets.html
+https://abhitsian.github.io/janus-pattern-library/index.html
 ```
 
 ---
