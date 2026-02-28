@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activity Hub — Janus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   JANUS DESIGN TOKENS  (Horizon 2.0)
+   ============================================================ */
+:root {
+  --color-brand:            #0080a3;
+  --color-primary-50:       #f4f9fb;
+  --color-primary-100:      #cee5f0;
+  --color-primary-200:      #a4d1e3;
+  --color-primary-300:      #7cbcd6;
+  --color-primary-400:      #53a6c5;
+  --color-primary-500:      #2d91b4;
+  --color-primary-600:      #007b9e;
+  --color-primary-700:      #006484;
+  --color-primary-800:      #004f6b;
+
+  --color-accent-50:        #e9ffe5;
+  --color-accent-100:       #bcf97a;
+  --color-accent-500:       #349b21;
+  --color-accent-600:       #298317;
+  --color-accent-700:       #1f6b0f;
+
+  --color-red-50:           #fff7f6;
+  --color-red-100:          #ffd8d0;
+  --color-red-500:          #fb3e37;
+  --color-red-600:          #e2161c;
+  --color-red-700:          #be0003;
+
+  --color-orange-50:        #fff7ed;
+  --color-orange-400:       #fb923c;
+  --color-orange-500:       #f97316;
+  --color-amber-300:        #f7a013;
+  --color-amber-500:        #c17500;
+
+  --color-blue-50:          #eff6ff;
+  --color-blue-500:         #3b82f6;
+  --color-blue-600:         #2563eb;
+  --color-blue-700:         #1d4ed8;
+
+  --color-indigo-50:        #eef2ff;
+  --color-indigo-500:       #6366f1;
+  --color-indigo-700:       #4338ca;
+
+  --color-purple-50:        #faf5ff;
+  --color-purple-500:       #a855f7;
+  --color-purple-700:       #7e22ce;
+
+  --color-neutral-50:       #f8fafc;
+  --color-neutral-100:      #f1f5f9;
+  --color-neutral-200:      #e2e8f0;
+  --color-neutral-300:      #cbd5e1;
+  --color-neutral-400:      #94a3b8;
+  --color-neutral-500:      #64748b;
+  --color-neutral-600:      #475569;
+  --color-neutral-700:      #334155;
+  --color-neutral-800:      #1e293b;
+
+  --color-ec-lightest:      #ffffff;
+  --color-ec-lighter:       #f5f6f7;
+  --color-ec-light:         #e2e5e7;
+  --color-ec-dark:          #4f5c62;
+  --color-ec-darker:        #37444a;
+  --color-ec-darkest:       #10171a;
+
+  --bg-primary:       #ffffff;
+  --bg-secondary:     #f5f6f7;
+  --bg-tertiary:      #e2e5e7;
+  --bg-inverted:      #10171a;
+  --text-primary:     #10171a;
+  --text-secondary:   #4f5c62;
+  --text-tertiary:    #94a3b8;
+  --text-inverted:    #ffffff;
+  --text-link:        #007b9e;
+  --border-default:   #e2e5e7;
+  --border-strong:    #3d4a50;
+  --interactive:      #0080a3;
+  --interactive-hover:#006484;
+
+  --shadow-2xs: 0 1px 0 0 rgba(0,0,0,.05);
+  --shadow-xs:  0 1px 2px 0 rgba(0,0,0,.05);
+  --shadow-sm:  0 1px 2px 0 rgba(0,0,0,.1), 0 1px 2px -1px rgba(0,0,0,.1);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -1px rgba(0,0,0,.06);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,.1), 0 4px 6px -4px rgba(0,0,0,.1);
+
+  --radius-sm: 2px; --radius-md: 4px; --radius-lg: 8px;
+  --radius-xl: 12px; --radius-2xl: 16px; --radius-full: 9999px;
+  --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-5:20px;
+  --space-6:24px;--space-8:32px;--space-10:40px;--space-12:48px;
+  --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+}
+
+/* ============================================================ RESET */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:14px;-webkit-font-smoothing:antialiased}
+body{font-family:var(--font-sans);font-size:14px;line-height:20px;color:var(--text-primary);background:var(--bg-secondary);min-height:100vh}
+a{text-decoration:none;color:inherit}button{font-family:inherit;cursor:pointer;border:none;background:none}
+
+/* ============================================================ SHELL — TOP BAR */
+.topbar{height:52px;background:var(--bg-primary);border-bottom:1px solid var(--border-default);display:flex;align-items:center;padding:0 20px;gap:16px;position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:var(--shadow-2xs)}
+.topbar-brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600;min-width:200px;flex-shrink:0}
+.topbar-brand-icon{width:28px;height:28px;background:var(--color-brand);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700}
+.topbar-search{flex:1;max-width:480px}
+.omni-bar{display:flex;align-items:center;gap:8px;background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:var(--radius-full);padding:6px 14px;transition:border-color .15s,box-shadow .15s}
+.omni-bar:focus-within{border-color:var(--interactive);box-shadow:0 0 0 3px var(--color-primary-100);background:var(--bg-primary)}
+.omni-icon{color:var(--text-tertiary);font-size:14px;flex-shrink:0}
+.omni-input{flex:1;border:none;background:none;font-family:var(--font-sans);font-size:13px;color:var(--text-primary);outline:none}
+.omni-input::placeholder{color:var(--text-tertiary)}
+.topbar-actions{display:flex;align-items:center;gap:4px;margin-left:auto}
+.icon-btn{width:32px;height:32px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:background .15s;font-size:16px;cursor:pointer;position:relative}
+.icon-btn:hover{background:var(--bg-secondary)}
+.icon-btn .notif-dot{position:absolute;top:4px;right:4px;width:8px;height:8px;background:var(--color-red-500);border-radius:50%;border:2px solid var(--bg-primary)}
+.avatar{width:32px;height:32px;border-radius:var(--radius-full);background:var(--color-primary-100);color:var(--color-primary-700);font-weight:600;font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* ============================================================ SHELL — SIDE NAV */
+.sidenav{position:fixed;top:52px;left:0;bottom:0;width:200px;background:var(--bg-primary);border-right:1px solid var(--border-default);padding:12px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;z-index:90}
+.nav-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:var(--radius-md);font-size:13.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:background .15s,color .15s;user-select:none}
+.nav-item:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.nav-item.active{background:var(--color-primary-50);color:var(--interactive)}
+.nav-item .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+.nav-badge{margin-left:auto;background:var(--color-red-500);color:#fff;font-size:10px;font-weight:700;border-radius:var(--radius-full);padding:1px 5px;line-height:14px}
+.nav-divider{height:1px;background:var(--border-default);margin:8px 0}
+.nav-section-label{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text-tertiary);padding:4px 10px 2px}
+.nav-spacer{flex:1}
+
+/* ============================================================ MAIN CONTENT */
+.main{margin-left:200px;margin-top:52px;min-height:calc(100vh - 52px);padding:28px 40px 60px;max-width:1100px}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-tertiary);margin-bottom:16px}
+.breadcrumb a{color:var(--text-link)}
+.breadcrumb a:hover{text-decoration:underline}
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:24px}
+.page-title{font-size:24px;font-weight:600;line-height:32px;margin-bottom:4px}
+.page-subtitle{font-size:14px;color:var(--text-secondary);line-height:20px}
+
+/* ============================================================ BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:inherit;font-weight:500;border-radius:var(--radius-lg);border:1px solid transparent;cursor:pointer;transition:background .15s,border-color .15s;white-space:nowrap}
+.btn-primary{font-size:14px;padding:8px 20px;background:var(--interactive);border-color:var(--interactive);color:#fff}
+.btn-primary:hover{background:var(--interactive-hover);border-color:var(--interactive-hover)}
+.btn-secondary{font-size:14px;padding:8px 20px;background:var(--bg-primary);border-color:var(--border-default);color:var(--text-primary)}
+.btn-secondary:hover{background:var(--bg-secondary)}
+.btn-ghost{font-size:13px;padding:6px 12px;color:var(--text-secondary)}
+.btn-ghost:hover{background:var(--bg-secondary);color:var(--text-primary)}
+.btn-sm{font-size:12px;padding:5px 14px;border-radius:var(--radius-md)}
+.btn-danger{font-size:13px;padding:6px 14px;color:var(--color-red-600);border-color:var(--color-red-100);background:var(--color-red-50)}
+.btn-danger:hover{background:var(--color-red-100)}
+
+/* ============================================================ BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 7px;border-radius:var(--radius-full);border:1px solid transparent}
+.badge-primary{background:var(--color-primary-50);color:var(--color-primary-700);border-color:var(--color-primary-100)}
+.badge-success{background:var(--color-accent-50);color:var(--color-accent-700);border-color:var(--color-accent-100)}
+.badge-warning{background:#fff7eb;color:var(--color-amber-500);border-color:#ffdc9d}
+.badge-error{background:var(--color-red-50);color:var(--color-red-700);border-color:var(--color-red-100)}
+.badge-neutral{background:var(--color-neutral-100);color:var(--color-neutral-700);border-color:var(--color-neutral-200)}
+.badge-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.badge-info{background:var(--color-blue-50);color:var(--color-blue-700);border-color:#dbeafe}
+.badge-purple{background:var(--color-purple-50);color:var(--color-purple-700);border-color:#e9d5ff}
+
+/* ============================================================ CHIPS / FILTERS */
+.filter-bar{display:flex;align-items:center;gap:8px;margin-bottom:20px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:4px;background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-full);padding:4px 14px;font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.chip:hover{border-color:var(--color-primary-200);color:var(--interactive)}
+.chip.active{background:var(--color-primary-50);border-color:var(--color-primary-200);color:var(--interactive);font-weight:600}
+.chip .chip-count{background:var(--bg-tertiary);border-radius:var(--radius-full);padding:0 6px;font-size:11px;font-weight:600;line-height:18px}
+.chip.active .chip-count{background:var(--color-primary-100);color:var(--color-primary-700)}
+
+/* ============================================================ CARD */
+.card{background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-xl);box-shadow:var(--shadow-xs);overflow:hidden}
+.card-padded{padding:20px 24px}
+
+/* ============================================================ AI SUMMARY */
+.ai-summary{background:linear-gradient(135deg,var(--color-primary-50) 0%,#f0f4ff 50%,#faf5ff 100%);border:1px solid var(--color-primary-100);border-radius:var(--radius-xl);padding:16px 20px;margin-bottom:20px}
+.ai-label{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--color-primary-700);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px}
+.ai-label-icon{width:18px;height:18px;background:linear-gradient(135deg,var(--color-primary-500),var(--color-indigo-500));border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:800}
+.ai-text{font-size:13px;line-height:20px;color:var(--text-secondary)}
+.ai-text strong{color:var(--text-primary);font-weight:600}
+
+/* ============================================================ STAT CARDS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat-card{background:var(--bg-primary);border:1px solid var(--border-default);border-radius:var(--radius-xl);padding:16px 20px;box-shadow:var(--shadow-xs)}
+.stat-label{font-size:12px;font-weight:500;color:var(--text-secondary);margin-bottom:8px}
+.stat-value{font-size:28px;font-weight:700;line-height:1;margin-bottom:4px}
+.stat-change{font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:2px}
+.stat-change.up{color:var(--color-accent-600)}
+.stat-change.down{color:var(--color-red-600)}
+.stat-change.neutral{color:var(--text-tertiary)}
+
+/* ============================================================ TASK TABLE */
+.task-table{width:100%;border-collapse:collapse}
+.task-table thead tr{border-bottom:1px solid var(--border-default)}
+.task-table th{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary);padding:10px 16px;text-align:left;white-space:nowrap;background:var(--bg-secondary)}
+.task-table td{padding:12px 16px;border-bottom:1px solid var(--border-default);vertical-align:middle;font-size:13px}
+.task-table tbody tr:last-child td{border-bottom:none}
+.task-table tbody tr{transition:background .1s}
+.task-table tbody tr:hover{background:var(--color-neutral-50)}
+
+.task-title{font-weight:500;color:var(--text-primary);margin-bottom:1px}
+.task-desc{font-size:12px;color:var(--text-secondary)}
+.task-meta{display:flex;align-items:center;gap:8px}
+.task-avatar{width:24px;height:24px;border-radius:var(--radius-full);font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.task-avatar-name{font-size:12px;color:var(--text-secondary)}
+.task-due{font-size:12px;color:var(--text-secondary);white-space:nowrap}
+.task-due.overdue{color:var(--color-red-600);font-weight:500}
+.task-actions{display:flex;gap:6px}
+
+/* ============================================================ PROGRESS */
+.progress-bar{height:6px;background:var(--bg-tertiary);border-radius:var(--radius-full);overflow:hidden}
+.progress-fill{height:100%;border-radius:var(--radius-full);transition:width .3s}
+
+/* ============================================================ TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:0;padding:20px 24px}
+.timeline-item{display:flex;gap:12px;padding-bottom:20px;position:relative}
+.timeline-item:last-child{padding-bottom:0}
+.timeline-item:not(:last-child)::after{content:'';position:absolute;left:13px;top:28px;bottom:0;width:1px;background:var(--border-default)}
+.timeline-dot{width:28px;height:28px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;border:2px solid var(--border-default);background:var(--bg-primary)}
+.timeline-dot.success{border-color:var(--color-accent-100);background:var(--color-accent-50)}
+.timeline-dot.info{border-color:var(--color-primary-100);background:var(--color-primary-50)}
+.timeline-dot.warning{border-color:#ffdc9d;background:#fff7eb}
+.timeline-dot.error{border-color:var(--color-red-100);background:var(--color-red-50)}
+.timeline-body{flex:1;padding-top:3px}
+.timeline-title{font-size:13px;font-weight:500;color:var(--text-primary);margin-bottom:2px}
+.timeline-time{font-size:11px;color:var(--text-tertiary)}
+.timeline-desc{font-size:12px;color:var(--text-secondary);margin-top:4px}
+
+/* ============================================================ TOGGLE */
+.toggle{position:relative;width:36px;height:20px;flex-shrink:0}
+.toggle input{display:none}
+.toggle-track{position:absolute;inset:0;background:var(--color-ec-light);border-radius:var(--radius-full);transition:background .2s;border:1px solid var(--border-default)}
+.toggle input:checked~.toggle-track{background:var(--interactive);border-color:var(--interactive)}
+.toggle-thumb{position:absolute;top:2px;left:2px;width:14px;height:14px;background:#fff;border-radius:var(--radius-full);box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .2s}
+.toggle input:checked~.toggle-thumb{left:18px}
+
+/* ============================================================ DIVIDER */
+.divider{height:1px;background:var(--border-default);margin:16px 0}
+
+/* ============================================================ SECTION HEADER */
+.section-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.section-title{font-size:16px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ TOP BAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">J</div>
+    Janus
+  </div>
+  <div class="topbar-search">
+    <div class="omni-bar">
+      <span class="omni-icon">&#128269;</span>
+      <input class="omni-input" placeholder="Ask me anything or search...">
+      <span style="font-size:11px;color:var(--text-tertiary);background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:3px;padding:1px 5px;font-family:monospace;">&#8984;K</span>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <div class="icon-btn">&#128276;<span class="notif-dot"></span></div>
+    <div class="icon-btn">&#8862;</div>
+    <div class="icon-btn">&#10067;</div>
+    <div class="avatar">AS</div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════ SIDE NAV -->
+<nav class="sidenav">
+  <div class="nav-item"><span class="nav-icon">&#127968;</span> Home</div>
+  <div class="nav-item active"><span class="nav-icon">&#128203;</span> Activity Hub <span class="nav-badge">7</span></div>
+  <div class="nav-item"><span class="nav-icon">&#128276;</span> Notifications</div>
+  <div class="nav-item"><span class="nav-icon">&#128218;</span> Knowledge</div>
+  <div class="nav-item"><span class="nav-icon">&#128101;</span> People</div>
+  <div class="nav-divider"></div>
+  <div class="nav-section-label">Catalog</div>
+  <div class="nav-item"><span class="nav-icon">&#128187;</span> IT Services</div>
+  <div class="nav-item"><span class="nav-icon">&#127970;</span> HR Services</div>
+  <div class="nav-item"><span class="nav-icon">&#9878;&#65039;</span> Legal</div>
+  <div class="nav-spacer"></div>
+  <div class="nav-item"><span class="nav-icon">&#9881;&#65039;</span> Settings</div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════ MAIN -->
+<main class="main">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb">
+    <a href="#">Home</a> &#8250;
+    <span>Activity Hub</span>
+  </div>
+
+  <!-- Page header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Activity Hub</h1>
+      <p class="page-subtitle">Track approvals, requests, and tasks assigned to you across all ServiceNow applications.</p>
+    </div>
+    <button class="btn btn-primary">+ New Request</button>
+  </div>
+
+  <!-- AI Summary -->
+  <div class="ai-summary">
+    <div class="ai-label">
+      <span class="ai-label-icon">J</span> Janus AI Summary
+    </div>
+    <div class="ai-text">
+      You have <strong>7 items</strong> requiring action. <strong>2 approvals</strong> are overdue (both from IT Ops). The laptop provisioning request from <strong>Maria Chen</strong> has been waiting 3 days. Your <strong>HR onboarding checklist</strong> is 80% complete with 2 tasks remaining.
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">Pending Approvals</div>
+      <div class="stat-value">4</div>
+      <span class="stat-change up">&#9650; 2 from last week</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Open Requests</div>
+      <div class="stat-value">12</div>
+      <span class="stat-change down">&#9660; 3 from last week</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Tasks Due Today</div>
+      <div class="stat-value">3</div>
+      <span class="stat-change neutral">&#8212; Same as yesterday</span>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completed This Week</div>
+      <div class="stat-value">18</div>
+      <span class="stat-change up">&#9650; 5 from last week</span>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <span class="chip active">All <span class="chip-count">7</span></span>
+    <span class="chip" onclick="this.classList.toggle('active')">Approvals <span class="chip-count">4</span></span>
+    <span class="chip" onclick="this.classList.toggle('active')">IT Requests <span class="chip-count">2</span></span>
+    <span class="chip" onclick="this.classList.toggle('active')">HR Tasks <span class="chip-count">1</span></span>
+    <span class="chip" onclick="this.classList.toggle('active')">Knowledge</span>
+    <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+      <span style="font-size:12px;color:var(--text-tertiary)">Sort:</span>
+      <select style="font-family:var(--font-sans);font-size:12px;border:1px solid var(--border-default);border-radius:var(--radius-md);padding:4px 8px;color:var(--text-primary);background:var(--bg-primary);outline:none;cursor:pointer">
+        <option>Due date</option>
+        <option>Priority</option>
+        <option>Newest first</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Task table card -->
+  <div class="card" style="margin-bottom:24px">
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th style="width:40%">Item</th>
+          <th>Status</th>
+          <th>Assignee</th>
+          <th>Due</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Row 1 -->
+        <tr>
+          <td>
+            <div class="task-title">Approve laptop provisioning — Maria Chen</div>
+            <div class="task-desc">IT Hardware &middot; REQ0049821</div>
+          </td>
+          <td><span class="badge badge-error badge-dot">Overdue</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due overdue">Feb 25</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-primary" style="padding:4px 12px;font-size:12px">Approve</button>
+              <button class="btn btn-sm btn-danger" style="padding:4px 12px;font-size:12px">Reject</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 2 -->
+        <tr>
+          <td>
+            <div class="task-title">Approve VPN access — Raj Patel</div>
+            <div class="task-desc">IT Network &middot; REQ0049835</div>
+          </td>
+          <td><span class="badge badge-error badge-dot">Overdue</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due overdue">Feb 26</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-primary" style="padding:4px 12px;font-size:12px">Approve</button>
+              <button class="btn btn-sm btn-danger" style="padding:4px 12px;font-size:12px">Reject</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 3 -->
+        <tr>
+          <td>
+            <div class="task-title">Review Q1 budget allocation</div>
+            <div class="task-desc">Finance &middot; TASK0091247</div>
+          </td>
+          <td><span class="badge badge-warning badge-dot">Pending</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due">Mar 3</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-secondary" style="padding:4px 12px;font-size:12px">Review</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 4 -->
+        <tr>
+          <td>
+            <div class="task-title">Complete security awareness training</div>
+            <div class="task-desc">HR Compliance &middot; TASK0091302</div>
+          </td>
+          <td><span class="badge badge-primary badge-dot">In Progress</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due">Mar 5</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-secondary" style="padding:4px 12px;font-size:12px">Continue</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 5 -->
+        <tr>
+          <td>
+            <div class="task-title">Approve software license — Adobe CC</div>
+            <div class="task-desc">IT Software &middot; REQ0049850</div>
+          </td>
+          <td><span class="badge badge-warning badge-dot">Pending</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-accent-50);color:var(--color-accent-700)">MC</div>
+              <span class="task-avatar-name">Maria Chen</span>
+            </div>
+          </td>
+          <td><span class="task-due">Mar 7</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-primary" style="padding:4px 12px;font-size:12px">Approve</button>
+              <button class="btn btn-sm btn-danger" style="padding:4px 12px;font-size:12px">Reject</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 6 -->
+        <tr>
+          <td>
+            <div class="task-title">Submit timesheet — Week 9</div>
+            <div class="task-desc">HR &middot; TASK0091410</div>
+          </td>
+          <td><span class="badge badge-neutral badge-dot">Not Started</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due">Mar 7</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-secondary" style="padding:4px 12px;font-size:12px">Open</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Row 7 -->
+        <tr>
+          <td>
+            <div class="task-title">Update emergency contact info</div>
+            <div class="task-desc">HR Onboarding &middot; TASK0091415</div>
+          </td>
+          <td><span class="badge badge-neutral badge-dot">Not Started</span></td>
+          <td>
+            <div class="task-meta">
+              <div class="task-avatar" style="background:var(--color-primary-100);color:var(--color-primary-700)">AS</div>
+              <span class="task-avatar-name">You</span>
+            </div>
+          </td>
+          <td><span class="task-due">Mar 10</span></td>
+          <td>
+            <div class="task-actions">
+              <button class="btn btn-sm btn-secondary" style="padding:4px 12px;font-size:12px">Open</button>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Two-column: Onboarding progress + Recent activity -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+
+    <!-- Onboarding progress -->
+    <div class="card">
+      <div class="card-padded">
+        <div class="section-header">
+          <div class="section-title">HR Onboarding</div>
+          <span class="badge badge-primary">80%</span>
+        </div>
+        <div class="progress-bar" style="margin-bottom:20px">
+          <div class="progress-fill" style="width:80%;background:linear-gradient(90deg,var(--color-primary-500),var(--color-accent-500))"></div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--color-accent-500);font-size:16px">&#10003;</span>
+            <span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">Complete personal info</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--color-accent-500);font-size:16px">&#10003;</span>
+            <span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">Sign employment agreement</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--color-accent-500);font-size:16px">&#10003;</span>
+            <span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">Set up direct deposit</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="color:var(--color-accent-500);font-size:16px">&#10003;</span>
+            <span style="font-size:13px;color:var(--text-secondary);text-decoration:line-through">Enroll in benefits</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:16px;height:16px;border:2px solid var(--border-default);border-radius:var(--radius-sm);flex-shrink:0"></span>
+            <span style="font-size:13px;font-weight:500">Complete security awareness training</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="width:16px;height:16px;border:2px solid var(--border-default);border-radius:var(--radius-sm);flex-shrink:0"></span>
+            <span style="font-size:13px;font-weight:500">Update emergency contact info</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent activity timeline -->
+    <div class="card">
+      <div class="card-padded" style="padding-bottom:0">
+        <div class="section-header" style="margin-bottom:4px">
+          <div class="section-title">Recent Activity</div>
+          <button class="btn btn-ghost">View all</button>
+        </div>
+      </div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot success">&#10003;</div>
+          <div class="timeline-body">
+            <div class="timeline-title">Benefits enrollment approved</div>
+            <div class="timeline-time">Today, 10:42 AM</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot info">&#128172;</div>
+          <div class="timeline-body">
+            <div class="timeline-title">Comment on REQ0049821</div>
+            <div class="timeline-time">Today, 9:15 AM</div>
+            <div class="timeline-desc">"Laptop specs confirmed — 16GB RAM, 512GB SSD. Awaiting your approval."</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot warning">&#9888;</div>
+          <div class="timeline-body">
+            <div class="timeline-title">VPN access request escalated</div>
+            <div class="timeline-time">Yesterday, 4:30 PM</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot success">&#10003;</div>
+          <div class="timeline-body">
+            <div class="timeline-title">Direct deposit setup completed</div>
+            <div class="timeline-time">Yesterday, 2:10 PM</div>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot info">&#128203;</div>
+          <div class="timeline-body">
+            <div class="timeline-title">New task assigned: Q1 budget review</div>
+            <div class="timeline-time">Feb 26, 11:00 AM</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+</body>
+</html>
