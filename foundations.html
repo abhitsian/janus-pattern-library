@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Janus — Horizon 2.0 Foundations</title>
+<link rel="stylesheet" href="tokens.css">
+<style>
+  body { background: var(--bg-primary); color: var(--text-primary); padding: 0; }
+  .page { max-width: 1200px; margin: 0 auto; padding: 48px 32px; }
+  h1 { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+  .subtitle { font-size: 16px; color: var(--text-secondary); margin-bottom: 48px; }
+  h2 { font-size: 24px; font-weight: 600; margin: 48px 0 8px; padding-bottom: 8px; border-bottom: 1px solid var(--border-default); }
+  h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--text-secondary); margin: 24px 0 8px; text-transform: uppercase; letter-spacing: .5px; }
+  p { line-height: 1.6; color: var(--text-secondary); margin-bottom: 16px; max-width: 720px; }
+  code { font-family: var(--font-mono); font-size: 12px; background: var(--bg-secondary); padding: 2px 6px; border-radius: 4px; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+  .badge-alpha { background: var(--color-primary-100); color: var(--color-primary-700); }
+
+  /* ── Swatch grid ───────────────────────────── */
+  .swatch-row { display: flex; gap: 4px; margin-bottom: 24px; flex-wrap: wrap; }
+  .swatch-row-label { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+  .swatch { width: 88px; border-radius: 8px; overflow: hidden; }
+  .swatch-color { height: 56px; }
+  .swatch-info { padding: 4px 6px; font-size: 10px; }
+  .swatch-info .stop { font-weight: 600; display: block; }
+  .swatch-info .hex { color: var(--text-tertiary); }
+
+  .swatch-large { width: 120px; }
+  .swatch-large .swatch-color { height: 80px; }
+  .swatch-large .swatch-info { padding: 6px 8px; font-size: 11px; }
+
+  /* ── Contrast chart ────────────────────────── */
+  .contrast-table { border-collapse: collapse; font-size: 12px; margin: 16px 0 32px; }
+  .contrast-table th, .contrast-table td { padding: 6px 12px; border: 1px solid var(--border-default); text-align: center; }
+  .contrast-table th { background: var(--bg-secondary); font-weight: 600; }
+  .contrast-pass { color: var(--color-accent-600); font-weight: 600; }
+  .contrast-fail { color: var(--text-tertiary); }
+
+  /* ── Token table ───────────────────────────── */
+  .token-table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 16px 0 32px; }
+  .token-table th { text-align: left; padding: 8px 12px; border-bottom: 2px solid var(--border-default); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-secondary); }
+  .token-table td { padding: 8px 12px; border-bottom: 1px solid var(--border-default); vertical-align: middle; }
+  .token-table code { font-size: 11px; }
+  .color-dot { width: 20px; height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle; border: 1px solid rgba(0,0,0,.1); }
+
+  /* ── Spacing demo ──────────────────────────── */
+  .spacing-grid { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin: 16px 0 32px; }
+  .spacing-item { text-align: center; font-size: 10px; }
+  .spacing-block { background: var(--color-primary-200); border-radius: 4px; margin-bottom: 4px; }
+
+  /* ── Radius demo ───────────────────────────── */
+  .radius-grid { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0 32px; }
+  .radius-item { text-align: center; font-size: 10px; }
+  .radius-box { width: 64px; height: 64px; background: var(--color-primary-100); border: 2px solid var(--color-primary-400); margin-bottom: 4px; }
+
+  /* ── Shadow demo ───────────────────────────── */
+  .shadow-grid { display: flex; gap: 24px; flex-wrap: wrap; margin: 16px 0 32px; }
+  .shadow-item { text-align: center; font-size: 10px; }
+  .shadow-box { width: 80px; height: 80px; background: var(--bg-primary); border-radius: 12px; margin-bottom: 6px; }
+
+  /* ── Figma source ──────────────────────────── */
+  .figma-source { background: var(--bg-secondary); border: 1px solid var(--border-default); border-radius: 12px; padding: 20px 24px; margin: 16px 0; font-size: 13px; }
+  .figma-source a { color: var(--text-link); text-decoration: underline; }
+  .figma-source dt { font-weight: 600; margin-top: 8px; }
+  .figma-source dd { margin-left: 0; color: var(--text-secondary); }
+
+  .dark-demo { background: #10171a; color: #f5f6f7; padding: 24px; border-radius: 12px; margin: 16px 0; }
+  .dark-demo .swatch-info .hex { color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <span class="badge badge-alpha">HORIZON 2.0 ALPHA</span>
+  <h1>Janus Design Foundations</h1>
+  <p class="subtitle">Extracted from the Horizon 2.0 Figma design system — colors, spacing, typography, shadows, and layout tokens for building Janus experiences.</p>
+
+  <div class="figma-source">
+    <strong>Figma sources</strong>
+    <dl>
+      <dt>Components</dt>
+      <dd><a href="https://www.figma.com/design/SPmKj8MGJIDvOJhvDbNIZO">-ALPHA- Horizon 2.0 → Components</a></dd>
+      <dt>Foundations</dt>
+      <dd><a href="https://www.figma.com/design/QCczk1RjplydYWDFIYKtDY">-ALPHA- Horizon 2.0 → Foundations</a></dd>
+      <dt>Icons</dt>
+      <dd><a href="https://www.figma.com/design/x3mbmEADpbXGF1vVkMhAdg">-ALPHA- Horizon 2.0 → Icons</a></dd>
+    </dl>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Configurable Colors</h2>
+  <p>Base colors are normalized to 3:1 contrast at stop 500 before the full scale is generated. These are the brand-configurable colors that change per tenant.</p>
+
+  <h3>Primary <code>--color-primary-*</code></h3>
+  <p>Base: <code>#0080A3</code></p>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#f4f9fb"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#f4f9fb</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#cee5f0"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#cee5f0</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#a4d1e3"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#a4d1e3</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#7cbcd6"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#7cbcd6</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#53a6c5"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#53a6c5</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2d91b4"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#2d91b4</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#007b9e"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#007b9e</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#006484"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#006484</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#004f6b"></div><div class="swatch-info"><span class="stop">800</span><span class="hex">#004f6b</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#003b52"></div><div class="swatch-info"><span class="stop">900</span><span class="hex">#003b52</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#002839"></div><div class="swatch-info"><span class="stop">950</span><span class="hex">#002839</span></div></div>
+  </div>
+
+  <h3>Accent <code>--color-accent-*</code></h3>
+  <p>Base: <code>#63DF4E</code> — also used as the Success semantic color.</p>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#e9ffe5"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#e9ffe5</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#bcf97a"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#bcf97a</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#88e353"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#88e353</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#52cb3d"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#52cb3d</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#41b22e"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#41b22e</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#349b21"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#349b21</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#298317"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#298317</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1f6b0f"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#1f6b0f</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#155408"></div><div class="swatch-info"><span class="stop">800</span><span class="hex">#155408</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0b4005"></div><div class="swatch-info"><span class="stop">900</span><span class="hex">#0b4005</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#072c02"></div><div class="swatch-info"><span class="stop">950</span><span class="hex">#072c02</span></div></div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Status Colors</h2>
+  <p>Semantic status colors for feedback, validation, and state.</p>
+
+  <h3>Error <code>--color-error-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#fff7f6"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#fff7f6</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffd8d0"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#ffd8d0</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffb3a5"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#ffb3a5</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ff8c7a"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#ff8c7a</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ff6550"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#ff6550</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#fb3e37"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#fb3e37</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e2161c"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#e2161c</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#be0003"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#be0003</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#960004"></div><div class="swatch-info"><span class="stop">800</span><span class="hex">#960004</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#700006"></div><div class="swatch-info"><span class="stop">900</span><span class="hex">#700006</span></div></div>
+  </div>
+
+  <h3>Warning <code>--color-warning-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#fff8f3"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#fff8f3</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffe8d0"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#ffe8d0</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffd4a8"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#ffd4a8</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#ffbc7a"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#ffbc7a</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#fa751a"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#fa751a</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#df6000"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#df6000</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#b84e00"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#b84e00</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#923d00"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#923d00</span></div></div>
+  </div>
+
+  <h3>Info <code>--color-info-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#f4f9ff"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#f4f9ff</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#d6e8ff"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#d6e8ff</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#b0d1ff"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#b0d1ff</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#88b8ff"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#88b8ff</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#5f9eff"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#5f9eff</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#3d84f8"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#3d84f8</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1b59bb"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#1b59bb</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0f4599"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#0f4599</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#083477"></div><div class="swatch-info"><span class="stop">800</span><span class="hex">#083477</span></div></div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Neutral Palettes</h2>
+  <p>Slate is the default surface neutral. Alternative palettes (Granite, Zinc, Dune, Stone) can be selected per-tenant for surface elevation. All have light and dark mode variants.</p>
+
+  <h3>Slate (default) <code>--color-neutral-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#f8fafc"></div><div class="swatch-info"><span class="stop">50</span><span class="hex">#f8fafc</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f1f5f9"></div><div class="swatch-info"><span class="stop">100</span><span class="hex">#f1f5f9</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e2e8f0"></div><div class="swatch-info"><span class="stop">200</span><span class="hex">#e2e8f0</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#cbd5e1"></div><div class="swatch-info"><span class="stop">300</span><span class="hex">#cbd5e1</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#94a3b8"></div><div class="swatch-info"><span class="stop">400</span><span class="hex">#94a3b8</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#64748b"></div><div class="swatch-info"><span class="stop">500</span><span class="hex">#64748b</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#475569"></div><div class="swatch-info"><span class="stop">600</span><span class="hex">#475569</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#334155"></div><div class="swatch-info"><span class="stop">700</span><span class="hex">#334155</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1e293b"></div><div class="swatch-info"><span class="stop">800</span><span class="hex">#1e293b</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0f172a"></div><div class="swatch-info"><span class="stop">900</span><span class="hex">#0f172a</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#020617"></div><div class="swatch-info"><span class="stop">950</span><span class="hex">#020617</span></div></div>
+  </div>
+
+  <h3>Granite <code>--color-granite-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#f8f9fa"></div><div class="swatch-info"><span class="stop">50</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f1f3f5"></div><div class="swatch-info"><span class="stop">100</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e2e6ea"></div><div class="swatch-info"><span class="stop">200</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#cdd3da"></div><div class="swatch-info"><span class="stop">300</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#97a3af"></div><div class="swatch-info"><span class="stop">400</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#687787"></div><div class="swatch-info"><span class="stop">500</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#4e5d6b"></div><div class="swatch-info"><span class="stop">600</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#384756"></div><div class="swatch-info"><span class="stop">700</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#233240"></div><div class="swatch-info"><span class="stop">800</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#121f2c"></div><div class="swatch-info"><span class="stop">900</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#060e17"></div><div class="swatch-info"><span class="stop">950</span></div></div>
+  </div>
+
+  <h3>Zinc <code>--color-zinc-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#fafafa"></div><div class="swatch-info"><span class="stop">50</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f4f4f5"></div><div class="swatch-info"><span class="stop">100</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e4e4e7"></div><div class="swatch-info"><span class="stop">200</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#d4d4d8"></div><div class="swatch-info"><span class="stop">300</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#a1a1aa"></div><div class="swatch-info"><span class="stop">400</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#71717a"></div><div class="swatch-info"><span class="stop">500</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#52525b"></div><div class="swatch-info"><span class="stop">600</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#3f3f46"></div><div class="swatch-info"><span class="stop">700</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#27272a"></div><div class="swatch-info"><span class="stop">800</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#18181b"></div><div class="swatch-info"><span class="stop">900</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#09090b"></div><div class="swatch-info"><span class="stop">950</span></div></div>
+  </div>
+
+  <h3>Dune (warm) <code>--color-dune-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#faf9f7"></div><div class="swatch-info"><span class="stop">50</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f5f3ef"></div><div class="swatch-info"><span class="stop">100</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e7e4de"></div><div class="swatch-info"><span class="stop">200</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#d6d2c9"></div><div class="swatch-info"><span class="stop">300</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#a8a294"></div><div class="swatch-info"><span class="stop">400</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#7a7466"></div><div class="swatch-info"><span class="stop">500</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#5c564a"></div><div class="swatch-info"><span class="stop">600</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#454038"></div><div class="swatch-info"><span class="stop">700</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#2e2a24"></div><div class="swatch-info"><span class="stop">800</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1a1714"></div><div class="swatch-info"><span class="stop">900</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0a0907"></div><div class="swatch-info"><span class="stop">950</span></div></div>
+  </div>
+
+  <h3>Stone (warm) <code>--color-stone-*</code></h3>
+  <div class="swatch-row">
+    <div class="swatch"><div class="swatch-color" style="background:#fafaf9"></div><div class="swatch-info"><span class="stop">50</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#f5f5f4"></div><div class="swatch-info"><span class="stop">100</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#e7e5e4"></div><div class="swatch-info"><span class="stop">200</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#d6d3d1"></div><div class="swatch-info"><span class="stop">300</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#a8a29e"></div><div class="swatch-info"><span class="stop">400</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#78716c"></div><div class="swatch-info"><span class="stop">500</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#57534e"></div><div class="swatch-info"><span class="stop">600</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#44403c"></div><div class="swatch-info"><span class="stop">700</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#292524"></div><div class="swatch-info"><span class="stop">800</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#1c1917"></div><div class="swatch-info"><span class="stop">900</span></div></div>
+    <div class="swatch"><div class="swatch-color" style="background:#0c0a09"></div><div class="swatch-info"><span class="stop">950</span></div></div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Contrast Ratio System</h2>
+  <p>The Horizon 2.0 color system is built around predictable contrast jumps across the scale. This ensures accessible color combinations by simply counting stops.</p>
+
+  <table class="contrast-table">
+    <thead><tr><th>Stop gap</th><th>Contrast ratio</th><th>WCAG use</th></tr></thead>
+    <tbody>
+      <tr><td>+5 stops</td><td class="contrast-pass">3:1</td><td>Large text, UI components</td></tr>
+      <tr><td>+6 stops</td><td class="contrast-pass">4.5:1</td><td>Normal text (AA)</td></tr>
+      <tr><td>+7 stops</td><td class="contrast-pass">7:1</td><td>Normal text (AAA)</td></tr>
+    </tbody>
+  </table>
+  <p>Example: text in <code>--color-primary-700</code> on a <code>--color-primary-100</code> background is a 6-stop gap = 4.5:1 contrast (WCAG AA).</p>
+
+  <!-- ============================================ -->
+  <h2>Semantic Tokens</h2>
+  <p>Use these in components instead of raw color values. They automatically adapt in dark mode.</p>
+
+  <table class="token-table">
+    <thead><tr><th>Token</th><th>Light</th><th>Dark</th><th>Use for</th></tr></thead>
+    <tbody>
+      <tr><td><code>--bg-primary</code></td><td><span class="color-dot" style="background:#ffffff"></span> #ffffff</td><td><span class="color-dot" style="background:#10171a"></span> #10171a</td><td>Page background</td></tr>
+      <tr><td><code>--bg-secondary</code></td><td><span class="color-dot" style="background:#f5f6f7"></span> #f5f6f7</td><td><span class="color-dot" style="background:#1a2228"></span> #1a2228</td><td>Card, sidebar background</td></tr>
+      <tr><td><code>--bg-tertiary</code></td><td><span class="color-dot" style="background:#e2e5e7"></span> #e2e5e7</td><td><span class="color-dot" style="background:#243038"></span> #243038</td><td>Hover states, wells</td></tr>
+      <tr><td><code>--text-primary</code></td><td><span class="color-dot" style="background:#10171a"></span> #10171a</td><td><span class="color-dot" style="background:#f5f6f7"></span> #f5f6f7</td><td>Headings, body text</td></tr>
+      <tr><td><code>--text-secondary</code></td><td><span class="color-dot" style="background:#4f5c62"></span> #4f5c62</td><td><span class="color-dot" style="background:#94a3b8"></span> #94a3b8</td><td>Descriptions, labels</td></tr>
+      <tr><td><code>--text-link</code></td><td><span class="color-dot" style="background:#007b9e"></span> #007b9e</td><td><span class="color-dot" style="background:#53a6c5"></span> #53a6c5</td><td>Links, interactive text</td></tr>
+      <tr><td><code>--border-default</code></td><td><span class="color-dot" style="background:#e2e5e7"></span> #e2e5e7</td><td><span class="color-dot" style="background:#37444a"></span> #37444a</td><td>Borders, dividers</td></tr>
+      <tr><td><code>--interactive</code></td><td><span class="color-dot" style="background:#0080a3"></span> #0080a3</td><td><span class="color-dot" style="background:#53a6c5"></span> #53a6c5</td><td>Buttons, controls</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================ -->
+  <h2>Spacing</h2>
+  <p>Based on a 4px grid. Use <code>--space-*</code> tokens for all margins, padding, and gaps.</p>
+
+  <div class="spacing-grid">
+    <div class="spacing-item"><div class="spacing-block" style="width:4px;height:4px"></div><code>1</code><br>4px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:8px;height:8px"></div><code>2</code><br>8px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:12px;height:12px"></div><code>3</code><br>12px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:16px;height:16px"></div><code>4</code><br>16px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:20px;height:20px"></div><code>5</code><br>20px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:24px;height:24px"></div><code>6</code><br>24px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:32px;height:32px"></div><code>8</code><br>32px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:40px;height:40px"></div><code>10</code><br>40px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:48px;height:48px"></div><code>12</code><br>48px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:64px;height:64px"></div><code>16</code><br>64px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:80px;height:80px"></div><code>20</code><br>80px</div>
+    <div class="spacing-item"><div class="spacing-block" style="width:96px;height:96px"></div><code>24</code><br>96px</div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Border Radius</h2>
+  <p>Standard radius tokens. Cards use <code>--radius-xl</code> (12px). Buttons use <code>--radius-lg</code> (8px). Pills use <code>--radius-full</code>.</p>
+
+  <div class="radius-grid">
+    <div class="radius-item"><div class="radius-box" style="border-radius:0px"></div><code>none</code><br>0px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:2px"></div><code>sm</code><br>2px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:4px"></div><code>md</code><br>4px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:8px"></div><code>lg</code><br>8px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:12px"></div><code>xl</code><br>12px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:16px"></div><code>2xl</code><br>16px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:24px"></div><code>3xl</code><br>24px</div>
+    <div class="radius-item"><div class="radius-box" style="border-radius:9999px"></div><code>full</code><br>9999px</div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Shadows</h2>
+  <p>Elevation shadows. Cards default to <code>--shadow-xs</code>. Modals use <code>--shadow-xl</code>. Dropdowns use <code>--shadow-lg</code>.</p>
+
+  <div class="shadow-grid">
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 1px 0 0 rgba(0,0,0,.05)"></div><code>2xs</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 1px 2px 0 rgba(0,0,0,.05)"></div><code>xs</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 1px 2px 0 rgba(0,0,0,.1),0 1px 2px -1px rgba(0,0,0,.1)"></div><code>sm</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -1px rgba(0,0,0,.06)"></div><code>md</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px -4px rgba(0,0,0,.1)"></div><code>lg</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 20px 25px -5px rgba(0,0,0,.1),0 8px 10px -6px rgba(0,0,0,.1)"></div><code>xl</code></div>
+    <div class="shadow-item"><div class="shadow-box" style="box-shadow:0 25px 50px -12px rgba(0,0,0,.25)"></div><code>2xl</code></div>
+  </div>
+
+  <!-- ============================================ -->
+  <h2>Typography</h2>
+
+  <table class="token-table">
+    <thead><tr><th>Token</th><th>Size</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>--text-xs</code></td><td>10px</td><td>Captions, badges</td></tr>
+      <tr><td><code>--text-sm</code></td><td>12px</td><td>Secondary labels, timestamps</td></tr>
+      <tr><td><code>--text-base</code></td><td>14px</td><td>Body text (default)</td></tr>
+      <tr><td><code>--text-md</code></td><td>16px</td><td>Emphasized body, card titles</td></tr>
+      <tr><td><code>--text-lg</code></td><td>18px</td><td>Section headers</td></tr>
+      <tr><td><code>--text-xl</code></td><td>20px</td><td>Sub-page titles</td></tr>
+      <tr><td><code>--text-2xl</code></td><td>24px</td><td>Page titles</td></tr>
+      <tr><td><code>--text-3xl</code></td><td>30px</td><td>Hero headings</td></tr>
+      <tr><td><code>--text-4xl</code></td><td>36px</td><td>Display headings</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Font stacks</h4>
+  <table class="token-table">
+    <thead><tr><th>Token</th><th>Stack</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>--font-sans</code></td><td>Inter, system-ui, sans-serif</td><td>All UI text</td></tr>
+      <tr><td><code>--font-mono</code></td><td>Fira Code, Cascadia Code, monospace</td><td>Code, tokens</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================ -->
+  <h2>Layout</h2>
+
+  <table class="token-table">
+    <thead><tr><th>Token</th><th>Value</th><th>Use</th></tr></thead>
+    <tbody>
+      <tr><td><code>--topbar-height</code></td><td>52px</td><td>Fixed top navigation bar</td></tr>
+      <tr><td><code>--sidenav-width</code></td><td>200px</td><td>Left sidebar navigation</td></tr>
+      <tr><td><code>--chat-panel-width</code></td><td>340px</td><td>Janus AI chat panel</td></tr>
+      <tr><td><code>--content-max-width</code></td><td>1100px</td><td>Main content area max width</td></tr>
+    </tbody>
+  </table>
+
+  <!-- ============================================ -->
+  <h2>Utility Colors Reference</h2>
+  <p>14 hue families with 11 stops each (50–950), matching Tailwind conventions. Use for data visualization, status indicators, tags, and decorative elements. Available as <code>--color-{hue}-{stop}</code>.</p>
+
+  <h4>Hue families</h4>
+  <div style="display:flex;flex-wrap:wrap;gap:4px;margin:16px 0 32px">
+    <span style="background:#ef4444;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Red</span>
+    <span style="background:#f97316;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Orange</span>
+    <span style="background:#eab308;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Yellow</span>
+    <span style="background:#fbbf24;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Amber</span>
+    <span style="background:#84cc16;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Lime</span>
+    <span style="background:#22c55e;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Green</span>
+    <span style="background:#14b8a6;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Teal</span>
+    <span style="background:#3b82f6;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Blue</span>
+    <span style="background:#6366f1;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Indigo</span>
+    <span style="background:#8b5cf6;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Violet</span>
+    <span style="background:#a855f7;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Purple</span>
+    <span style="background:#d946ef;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Fuchsia</span>
+    <span style="background:#ec4899;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Pink</span>
+    <span style="background:#f43f5e;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:500">Rose</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -6,12 +6,19 @@ When asked to create a mock, generate a single self-contained `.html` file using
 
 ## Design system reference
 
-- `tokens.css` — all colors, spacing, shadows, typography as CSS variables
+- `tokens.css` — all colors, spacing, shadows, typography as CSS variables (synced from Horizon 2.0 Figma)
+- `foundations.html` — Horizon 2.0 color system reference (configurable colors, neutrals, utility colors, contrast ratios, dark mode)
 - `index.html` — full component gallery and design token reference
 - `snippets.html` — copy-paste HTML for every component
 - `new-mock.html` — the shell template (top bar + side nav + main area) to start from
 
-Always read `new-mock.html` as your starting point. Read `index.html` or `snippets.html` if you need to find the right component HTML.
+Always read `new-mock.html` as your starting point. Read `index.html` or `snippets.html` if you need to find the right component HTML. Read `foundations.html` for the full Horizon 2.0 color system.
+
+## Figma sources (Horizon 2.0 ALPHA)
+
+- **Components**: figma.com/design/SPmKj8MGJIDvOJhvDbNIZO
+- **Foundations**: figma.com/design/QCczk1RjplydYWDFIYKtDY
+- **Icons**: figma.com/design/x3mbmEADpbXGF1vVkMhAdg
 
 ## Rules for every mock
 
@@ -21,7 +28,7 @@ Always read `new-mock.html` as your starting point. Read `index.html` or `snippe
 4. **Match the shell exactly** — keep the topbar, sidenav, and `.main` layout from `new-mock.html`
 5. **Name the file descriptively** — e.g. `activity-hub-filters.html`, `approval-detail.html`
 
-## Janus visual style
+## Janus visual style (Horizon 2.0)
 
 - Clean, minimal — no decorative gradients or heavy shadows
 - Cards use `border-radius: 12px`, `border: 1px solid var(--border-default)`, `box-shadow: var(--shadow-xs)`
@@ -30,6 +37,11 @@ Always read `new-mock.html` as your starting point. Read `index.html` or `snippe
 - Status badges: `badge-success`, `badge-warning`, `badge-error`, `badge-neutral`
 - Spacing follows a 4px grid — use `var(--space-*)` tokens
 - Typography: Inter font, body 14px/20px, page titles 24px/32px weight 600
+- Brand colors: Primary `#0080A3` (teal), Accent `#63DF4E` (green), Infinite Blue `#032D42`
+- Color system: 11-stop scales (50–950), contrast jumps +5 stops = 3:1, +6 stops = 4.5:1
+- Dark mode: use semantic tokens (`--bg-primary`, `--text-primary`, etc.) — they auto-switch via `data-theme="dark"` or `prefers-color-scheme`
+- Neutral palettes: Slate (default), Granite, Zinc, Dune, Stone — selectable per tenant
+- 14 utility hue families available for data viz, tags, and decorative use
 
 ## Workflow
 
